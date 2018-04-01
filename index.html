@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>John Muir Trail</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="stylesheets/styles.css">
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class = "col-sm-2">
+            <div class = "vert-cent">
+              <button id= "map-btn" type="button" class="btn btn-default">Map</button>  
+            </div>
+            <div class = "vert-cent">
+                <button id= "status-btn" type="button" class="btn btn-default">Status</button>
+            </div>
+            <div class = "vert-cent">
+                <button id= "rations-btn" type="button" class="btn btn-default">Rations</button>
+            </div>
+            <div class = "vert-cent">
+                <button id= "buy-btn" type="button" class="btn btn-default disabled">Buy</button> <!-- replace disabled w/ active makes it clickable -->
+            </div>
+            <div class = "vert-cent">
+                <button id= "rest-btn" type="button" class="btn btn-default">Rest</button>
+            </div>
+            <div class = "vert-cent">
+                <button id= "pace-btn" type="button" class="btn btn-default">Pace</button>
+            </div>
+        </div>
+
+        <div class = "col-sm-6">
+            <div class="row bgimg">
+                    <span class = "event-text1 col-md-12" id= "print-event"></span>
+            </div>
+
+            <div class="row map">
+              <div class="col-md-12">The John Muir Trail</div>  
+            </div>
+            
+            <div class="row event-log">
+                <div class="col-md-12" id ="logCount">
+
+                </div>
+            </div>
+        </div>
+
+        <div class = "col-sm-4">
+                <div class = "conditions-box vert-cent1">
+                    <div class ="center-text"><b>Conditions</b></div>
+                    <span class = "stats-text1" id= "daysCount">Days on trail: 0</span><br>
+                    <span class = "stats-text1" id= "weather">Weather: Sunny</span><br>
+                </div>
+
+                <div class = "distance-box vert-cent1">
+                    <div class ="center-text"><b>Distance</b></div>
+                    <span class = "stats-text1" id= "nextCamp">Miles to Next Camp: 0</span> <br>
+                    <span class = "stats-text1" id= "milesCount">Total Miles Traveled: 0</span>
+                </div>
+
+                <div class = "wagon-box vert-cent1">
+                    <div class ="center-text"><b>Status</b></div>
+                    <span id= 'paceCount'>Pace: </span> <br>
+                    <span id= 'rationCount'>Ration: </span> <br>
+                    <span id= 'rfCount'>Remaining Food: </span> <br>
+                    <span id= 'healthCount'>Health: </span> <br>
+                </div>
+                
+                <div id="status-box" class =  "vert-cent1">
+                   Status: Stopped <br> 
+                </div>
+                
+                <div class = "pause-box">
+                        <button type="button" id="pause-btn" class="btn btn-danger btn-long">Stop Walking</button>
+                    </div>
+
+                <div class = "continue-box">
+                    <button type="button" id="continue-btn" class="btn btn-success btn-long">Start Walking</button>
+                </div>
+                
+        </div>
+    </div>
+</div>
+
+       
+
+ <script
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="./src/johnMuir.js"></script>
+<script src="./src/main.js"></script> 
+
+</body>
+</html>
