@@ -49,6 +49,7 @@ body {
     border-radius: 10px;
 }
 
+
 .col-sm-4 {
     margin-top:20px;
     padding-left: 50px;
@@ -68,7 +69,33 @@ body {
     margin-bottom: 15px;
 }
 
+.rations-info .pace-info {
+    padding: 20px 10px;
+}
 
+.btn-map {
+    width: 120px;
+    height: 40px;
+    font-size: 16px;
+    border-radius: 10px;
+}
 
+.btn-sm {
+    width: 65px;
+    height: 25px;
+    font-size: 12px;
+    border-radius: 10px;
+    padding: 3px;
+}
 
+.col-sm-6 {
+    font-size: 14px;
+}
 
+.right-align {
+    text-align: right;
+}
+
+.red {
+    background-color: red;
+}

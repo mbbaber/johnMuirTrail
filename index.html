@@ -14,22 +14,22 @@
     <div class="row">
         <div class = "col-sm-2">
             <div class = "vert-cent">
-              <button id= "map-btn" type="button" class="btn btn-default">Map</button>  
+              <button id= "map-btn" type="button" class="btn btn-default map-btn">Map</button>  
             </div>
             <div class = "vert-cent">
                 <button id= "status-btn" type="button" class="btn btn-default">Status</button>
             </div>
             <div class = "vert-cent">
-                <button id= "rations-btn" type="button" class="btn btn-default">Rations</button>
+                <button id= "rations-btn" type="button" class="btn btn-default rations-btn">Rations</button>
             </div>
             <div class = "vert-cent">
-                <button id= "buy-btn" type="button" class="btn btn-default disabled">Buy</button> <!-- replace disabled w/ active makes it clickable -->
+                <button id= "buy-btn" type="button" class="btn btn-default buy-btn">Buy</button> <!-- replace disabled w/ active makes it clickable -->
             </div>
             <div class = "vert-cent">
                 <button id= "rest-btn" type="button" class="btn btn-default">Rest</button>
             </div>
             <div class = "vert-cent">
-                <button id= "pace-btn" type="button" class="btn btn-default">Pace</button>
+                <button id= "pace-btn" type="button" class="btn btn-default pace-btn">Pace</button>
             </div>
         </div>
 
@@ -39,7 +39,35 @@
             </div>
 
             <div class="row map">
-              <div class="col-md-12">The John Muir Trail</div>  
+            <div class="col-md-12">
+              
+                <div class="map-info">
+                    <img height="42" width="42" src = "./img/dsc08270.jpg">
+                </div> 
+
+                <div id = "status-info" class="status-info">
+                    </div>
+
+                <div id ="rations-info" class="rations-info">
+                    <b>Rations</b> <br>
+                    How much would you like to eat? <br><br>
+                    <button id= "small-meals-btn" type="button" class=" btn-default btn-map">Small Meals</button>
+                    <button id= "normal-meals-btn" type="button" class=" btn-default btn-map">Normal Meals</button>
+                    <button id= "big-meals-btn" type="button" class="btn-default btn-map">Big Meals</button>
+                </div> 
+
+                <div id = "buy-info" class="buy-info">
+                </div> 
+
+                <div id = "pace-info" class="pace-info">
+                    <b>Pace</b> <br>
+                    How fast would you like to walk? <br><br>
+                    <button id= "slow-btn" type="button" class="btn-default btn-map">Slow Pace</button>
+                    <button id= "normal-btn" type="button" class=" btn-default btn-map">Normal Pace</button>
+                    <button id= "fast-btn" type="button" class=" btn-default btn-map">Fast Pace</button>
+                </div> 
+            
+            </div> 
             </div>
             
             <div class="row event-log">
