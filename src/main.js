@@ -1,8 +1,11 @@
-priceFood = 10 //$10 for 10lbs
-priceAid = 5 //$5 for 1.
+//constants
+var priceFood = 10 //$10 for 10lbs
+var priceAid = 5 //$5 for 1.
+var iHikerStats = {};
+var stringHikerStats;
 
 //Set up hiker stats (will be updated each mile of play, each day of play, and during events)
-function Party(food, money, pace, rations, hikers, aid){
+function Party(food, money, pace, rations, hikers, aid){ 
     this.food = food;
     this.money = money;
     this.pace = pace;
@@ -10,7 +13,7 @@ function Party(food, money, pace, rations, hikers, aid){
     this.hikers = hikers;
     this.aid = aid;
 
-    Party.prototype.health = function () {
+    Party.prototype.health = function () { // total Health is the average of each hiker's health.
         var totalHealth = 0;
         for (i = 0; i < this.hikers.length; i++){
             totalHealth += this.hikers[i].health;
@@ -18,19 +21,19 @@ function Party(food, money, pace, rations, hikers, aid){
         return totalHealth / this.hikers.length;
     };
 
-    Party.prototype.paceString = function () {
-        if (this.pace === 1) {
+    Party.prototype.paceString = function () { // set strings for pace setting.
+        if (this.pace === 5) {
             return "Slow"
-        }else if (this.pace === 2) {
+        }else if (this.pace === 10) {
             return "Normal"
-        } else if (this.pace === 3) {
+        } else if (this.pace === 15) {
             return "Fast"
         } else {
             return "Cannot determine"
         };
     };
 
-    Party.prototype.rationString = function () {
+    Party.prototype.rationString = function () { // set strings for ration setting.
         if (this.rations === 3) {
             return "Big Meals"
         }else if (this.rations === 2) {
@@ -42,7 +45,7 @@ function Party(food, money, pace, rations, hikers, aid){
         };
     };
 
-    Party.prototype.healthString = function () {
+    Party.prototype.healthString = function () { // set strings for health percentages.
         var health = this.health()
         if (health >= 100) {
             return "Perfect"
@@ -71,14 +74,14 @@ function Hiker(name, health) {
 var hiker1 = new Hiker("Maggie", 100);
 var hiker2 = new Hiker("Louis", 100);
 var hiker3 = new Hiker("Hiker3", 100);
-var hiker4 = new Hiker("Hiker3", 100);
-var hiker5 = new Hiker("Hiker3", 100);
+var hiker4 = new Hiker("Hiker4", 100);
+var hiker5 = new Hiker("Hiker5", 100);
 
 //create party array with hikers inside
-var party = new Party(50, 300, 2, 3,[hiker1, hiker2, hiker3, hiker4, hiker5], 1);
+var party = new Party(50, 300, 10, 3,[hiker1, hiker2, hiker3, hiker4, hiker5], 1);
 
 function subtractFood () {
-    if (miles %10 === 0) {
+    if (miles %party.pace === 0) {
         if (party.rations === 3) {
             party.food -= 3 * party.hikers.length;  
         } else if (party.rations === 2) {
@@ -88,10 +91,9 @@ function subtractFood () {
         } else {
             party.food
         };
-    } else {
-       remainingFoodCount.innerText = "Remaining Food: " + party.food + " lbs"; 
-    }
-};  
+    };
+};
+    
 
 //adjust hiker stats by weather, pace, and ration
 function adjustHikerStats () {
@@ -114,33 +116,30 @@ function adjustHikerStats () {
     };
     function adjustForPace (){ // if hikers walk slowly, they get healthier (and inverse)
         for (i = 0; i < party.hikers.length; i++){
-            if (party.pace === 3) {
+            if (party.pace === 15) {
                 party.hikers[i].health -= 1;
-            } else if (party.pace === 1) {
+            } else if (party.pace === 5) {
                 party.hikers[i].health += 1;
             } else {
                 party.hikers[i].health
             };
         };
     };
-
     function adjustForRation (){ // if hikers eat well, they get healthier (and inverse)
         for (i = 0; i < party.hikers.length; i++){
             if (party.rations === 3) {
                 party.hikers[i].health += 1;
-            } else if (party.pace === 1) {
+            } else if (party.rations === 1) {
                 party.hikers[i].health -= 1;
             } else {
                 party.hikers[i].health;
             };
         };
     };
-
     function adjustForFood () { // if food falls to zero, hiker health will deteriorate fast.
         for (i = 0; i < party.hikers.length; i++){
-            if (party.rations < 0) {
-                party.hikers[i].health -= 20;
-                console.log("decrease health bc of food shortage.") //not working
+            if (party.food < 0) {
+                party.hikers[i].health -= 20; // hiker will die in 5 days.
             }
         };
     };
@@ -150,27 +149,35 @@ function adjustHikerStats () {
     adjustForFood();
 };
 
-//My Main Function (loops through miles of game and updates/prints events)
-//declare variables
+
+//TODO: put @ top of page;
 var miles = 0;
 var totalMiles = 0;
 var days = 0;
 var weather;
 
-function walking () {  //would like to clean this up eventually
+//My Main Function (loops through miles of game and updates/prints events)
+function walking () {  // TODO: would like to clean this up eventually/combine functions
     if (miles <= camps[camps.length-1].distance){
+        
         printWalkingText(miles)
         printCamp(miles);
+
         countDays(miles);
-        getRandomWeatherByDay(miles);
-        
+        getRandomWeatherByDay(miles); 
+
         randomEvent(miles);
-        printRed();
+
+        //printRed();
         stopAtStore();
         subtractFood();
         adjustHikerStats();
+
         printDistanceBox();
         printStatsBox();
+
+        getIndividualHealth();
+
         endMessage();
         miles++
     } else {
@@ -178,7 +185,7 @@ function walking () {  //would like to clean this up eventually
     }
 };
 
-//sets variables to use for printing in HTML
+//TODO: put @ top of page, sets variables to use for printing in HTML
 var weatherCount = document.getElementById('weather');
 var nextCampCount = document.getElementById('nextCamp');
 var logCount = document.getElementById('logCount');
@@ -189,41 +196,8 @@ var rationCount = document.getElementById('rationCount');
 var healthCount = document.getElementById('healthCount');
 var remainingFoodCount = document.getElementById('rfCount');
 
-function printRed () { //not working
-    if (party.health <= 50){
-        healthCount.innerText = "<div class='red'>Health: " + party.health() + "</div>"; //party.healthString
-    } else if (party.food < (party.hikers.length * party.ration*3)) { // if group is running out of food, print in red
-        console.log('hey this test')
-        rationCount.innerText = "<div class='red'>Ration: " + party.rationString() + "</div>";
-    } else {
-    };
-};
 
-/*
-function healthPrompts () {
-    if party.hikers
-}*/
 
-//function for printing all informaiton that goes into stats box: pace, ration, health, remaining food
-function printStatsBox () {
-    function printPace () {
-        paceCount.innerText = "Pace: " + party.paceString();
-    };
-    function printRation() {
-        rationCount.innerText = "Ration: " + party.rationString();
-    };
-    function printHealth () {
-        healthCount.innerText = "Health: " + party.health(); //party.healthString
-    };
-    function printRemainingFood() {
-        remainingFoodCount.innerText = "Remaining Food: " + party.food + " lbs"; 
-    };
-
-printPace();
-printRation();
-printHealth();
-printRemainingFood();
-};
 
 //prints everything in the Distance box: distance to next camp and miles trav
 function printDistanceBox () {
@@ -244,8 +218,41 @@ printNextCamp();
 printMilesText();
 };
 
+//function for printing all informaiton that goes into stats box: pace, ration, health, remaining food
+function printStatsBox () {
+    function printPace () {
+        paceCount.innerText = "Pace: " + party.paceString();
+    };
+    function printRation() {
+        rationCount.innerText = "Ration: " + party.rationString();
+    };
+    function printHealth () {
+        if (party.health() < 50){
+            healthCount.innerText = "<div class='red'>Health: " + party.health() + "</div>"; //party.healthString
+        } else {
+            healthCount.innerText = "Health: " + party.health(); //party.healthString
+        }
+    };
+    function printRemainingFood() { //TODO: never have negative food count and never display negative food count.
+        if (party.food >= 0){
+            remainingFoodCount.innerText = "Remaining Food: " + party.food + " lbs"; 
+            if (party.food < (party.hikers.length * party.ration*3)) {
+                remainingFoodCount.innerText = "<div class='red'>Remaining Food: " + party.food + " lbs</div>";
+            };
+        } else {
+            remainingFoodCount.innerText = "Remaining Food: 0 lbs"; 
+        };
+    };
+
+printPace();
+printRation();
+printHealth();
+printRemainingFood();
+};
+
+//changes weather every 10 mile, defined as 1 day;
 function getRandomWeatherByDay (miles){ //assuming day = 10miles
-    if ((miles %10 === 0) && (miles !== 0)){
+    if ((miles %party.pace === 0) && (miles !== 0)){
         getRandomWeather();
     };
 };
@@ -261,11 +268,9 @@ function getRandomWeather (){
         weatherCount.innerText = "Weather: " +weather;
 };
 
-
-
 //create countDay function, which sets 1 day = 10 miles, and prints when each day changes
 function countDays () {
-    if (miles %10 === 0){
+    if (miles %party.pace === 0){
         days++;
         daysCount.innerText = "Days on Trail: " +days;
     }
@@ -279,10 +284,10 @@ function countDays () {
 function printWalkingText() {
     camps.forEach(function(camp) {
         if (miles === 1) {
-            logCount.innerText = 'Walking...';
+            logCount.innerText = 'On the trail...';
         }
         else if (miles === Math.floor(camp.distance +1)) {
-            logCount.insertAdjacentHTML( "afterbegin",'<div class="log-font">Walking...</div><br>');
+            logCount.insertAdjacentHTML( "afterbegin",'<div class="log-font">On the trail...</div><br>');
         }  
     });
 };
@@ -338,21 +343,38 @@ camps.push(camp1, camp2, camp3, camp4, camp5, camp6, camp7, camp8, camp9, camp10
 
 
 //create, print random event, and change associated stats
-var printEvent = document.getElementById('print-event');
+
+
 function randomEvent () {
     if ((Math.random() > 0.8) && (miles !== 0)) { //20% probabilty that an event happens each mile (can change this).
-        var newEvent = events[Math.floor(Math.random()*events.length)];
-        if (newEvent.stopHike){
-            stopWalking();
-        }
-        
+        newEvent = events[Math.floor(Math.random()*events.length)];
+
+        newEvent.userInput();
         newEvent.changeStats();
     } else {
         printEvent.innerHTML = ' ';
     };
 };
 
+function disableButtons () {
+    document.getElementById('pause-btn').disabled = true; 
+    document.getElementById('continue-btn').disabled = true; 
+    document.getElementById('rest-btn').disabled = true; 
+};
+
+function enableButtons () {
+    document.getElementById('pause-btn').disabled = false; 
+    document.getElementById('continue-btn').disabled = false; 
+    document.getElementById('rest-btn').disabled = false;
+};
+
 //set up object constructor for event information: type (stat-change), notification (positive or negative), value (-/+ value to change in stats), stat (which stat will be changed), text (message to show);
+var statusBox = document.getElementById('status-box');
+var printEvent = document.getElementById('print-event');
+var newEvent;
+var yesOrNoInfo = document.getElementById('yesOrNo-info');
+var randomHiker;
+var text;
 
 function Event (type, notification, value, stat, text, stopHike) { //setting up object constructor
     this.type = type;
@@ -363,50 +385,104 @@ function Event (type, notification, value, stat, text, stopHike) { //setting up 
     this.stopHike = stopHike;
 
     Event.prototype.changeStats = function() {
+        randomHiker = party.hikers[Math.floor(Math.random() * party.hikers.length)];
+        text = randomHiker.name + this.text;
         if (this.type === 'stat-change') {
-            var randomHiker = party.hikers[Math.floor(Math.random() * party.hikers.length)]
-            var text = randomHiker.name + this.text;
             if (this.stat === 'health'){
                 randomHiker.health += this.value;
             } else {
                 party[this.stat] += this.value;
             }
-        } else {
-            var text = this.text; // if event in not a stat change, this line makes sure text is defined.
-        };
-        
+        } else if (this.type === 'rest') {
+            clearInterval(mainInterval);
+            statusBox.innerHTML = "Status: Resting";
+            setTimeout(updateRestStats, 2500);
+            setTimeout(stopWalking, 5000);
+        }
         printEvent.innerHTML = '<div class = "center-text">'+ text + '</div><br>'
     };
+
+
+    Event.prototype.yesButtonEvent = function() {
+        party.aid -= 1;
+        randomHiker.health -= this.value;  //variable, can change
+        setTimeout(startWalking, 2000);
+        setTimeout(enableButtons, 2000);
+    };
+    
+    Event.prototype.noButtonEvent = function() {
+        randomHiker.health -= this.value*2; //variable, can change
+        setTimeout(startWalking, 2000);
+        setTimeout(enableButtons, 2000);
+    };
+
+    Event.prototype.userInput = function() {
+        if (this.type === 'user-input') {
+            randomHiker = party.hikers[Math.floor(Math.random() * party.hikers.length)]
+            text = randomHiker.name + this.text;
+            stopWalking();
+            if ((party.aid > 0) && (this.stat === 'health')) {
+                yesOrNoInfo.innerHTML = "<div id = 'yesOrNo-info' class= 'yesOrNo-info col-md-12'><b>Would you like to use a first-aid kit?</b><br><button class = 'col-sm-6'id= 'yes-btn' type='button' class='btn-default btn-sm'>Yes</button><br><button class = 'col-sm-6' id= 'no-btn' type='button' class='btn-default btn-sm'>No</button>";
+                var yesButton = document.getElementById('yes-btn');
+                var noButton = document.getElementById('no-btn');
+                disableButtons();
+                yesButton.onclick = function () {
+                    newEvent.yesButtonEvent();
+                };
+                noButton.onclick = function () {
+                    newEvent.noButtonEvent();
+                };
+            } else if (this.stat === 'health') {
+                yesOrNoInfo.innerHTML = "<div id = 'yesOrNo-info' class= 'yesOrNo-info col-md-12'><b>You have no first-aid kits.<b></div>";
+            } else {
+                console.log("user-input stat != health was found")
+            };
+        } else {
+            var text = this.text; // if event in not a user-input, this line makes sure text is defined.
+        };
+        printEvent.innerHTML = '<div class = "center-text">'+ text + '</div><br>';
+    };
+
 };
 
+
+
 // enter information for each event
+
+//food positive
 var event1 = new Event('stat-change', 'positive', (party.rations * party.hikers.length), 'food', " found wild berries." );
 var event2 = new Event('stat-change', 'positive', (party.rations * party.hikers.length), 'food', " found wild mushrooms." );
-var event3 = new Event('stat-change', 'negative', -5, 'health', " sprained an ankle." );
-var event4 = new Event('stat-change', 'negative', -20, 'health', " was attacked by a bear!", true);
-var event5 = new Event('stat-change', 'negative', -5, 'food', "'s food spoiled.");
-var event6 = new Event('stat-change', 'negative', -10, 'health', " drank bad water.");
-var event7 = new Event('stat-change', 'negative', -10, 'health', " is dehydrated.");
-var event8 = new Event('stat-change', 'negative', -15, 'health', " was bitten by a snake!");
-var event9 = new Event('stat-change', 'negative', -15, 'health', " drank downstream from camp and got E. Coli!");
-var event10 = new Event('stat-change', 'negative', (-party.rations * party.hikers.length), 'food', " fell in a river and lost a entire day's food ration!");
+
+//food negative
+var event3 = new Event('stat-change', 'negative', -5, 'food', "'s food spoiled.");
+var event4 = new Event('stat-change', 'negative', (-party.rations * party.hikers.length), 'food', " fell in a river and lost a entire day's food ration!");
+
+//health negative
+var event5 = new Event('user-input', 'negative', -5, 'health', " sprained an ankle." );
+var event6 = new Event('user-input', 'negative', -10, 'health', " was attacked by a bear!");
+var event7 = new Event('stat-change', 'negative', -10, 'health', " drank bad water.");
+var event8 = new Event('stat-change', 'negative', -10, 'health', " is dehydrated.");
+var event9 = new Event('user-input', 'negative', -7.5, 'health', " was bitten by a snake!");
+var event10 = new Event('user-input', 'negative', -7.5, 'health', " drank downstream from camp and got E. Coli!");
 var event11 = new Event('stat-change', 'negative', -10, 'health', " is exhausted from walking.");
+
+//lost supplies
+var event12 = new Event ('stat-change', 'negative', -1, 'first-aid', "'s backpack got wet and a first aid kit was ruined.");
+var event13 = new Event ('stat-change', 'negative', -50, 'money', "'s backpack broke and $50 was lost.");
+
+
+//rest event (lose food, but gain health and more like to have events happen to you.)
+
+var event14 = new Event('rest', 'negative', (-party.hikers.length), "food", " took the wrong trail. Lost 1 day.");
+var event15 = new Event('rest', 'negative', (-party.hikers.length), "food", " got lost. Lost 1 day.");
 
 // put each event into an array, called events
 var events = [];
-events.push(event1, event2, event3, event4, event5, event6, event7, event8, event9, event10, event11);
+events.push(event1, event2, event3, event4, event5, event6, event7, event8, event9, event10, event11, event12, event13, event14, event15);
 
-/* Need to figure out how to incorporate these events
-//Event happens, prompt: would you like to use first aid kit? yes -5 health, no -10health.
-var event= new Event ('stat-change', 'negative', -1, 'first-aid', "'s backpack broke and a first aid kit was lost!");
-var event= new Event ('stat-change', 'negative', -party.hikers.length, 'clothing', " forgot to put on the campfire. Your group lost " +party.hikers.length+ " items of clothing!");
-var event= new Event ('stat-change', 'negative', 1, 'clothing', "A fellow backpacker gave you extra set of clothing.");
 
-//rest event (stop clock AND stat change)
-var event = newEvent('stat-change', 'negative', (2 * party.hikers.length), "food", "Trail impassable. Rest 2 days.");
-var event = newEvent('stat-change', 'negative', (-party.hikers.length), "food", "You took the wrong trail. Lost one day.");
-var event = newEvent('stat-change', 'negative', (-party.hikers.length), "food", " got lost. Lost 1 day.");
-*/
+
+
 
 
 var mainInterval;
@@ -416,6 +492,7 @@ function startWalking(){
     $('.pace-info').hide();
     $('.map-info').hide();
     $('.rations-info').hide();
+    $('.yesOrNo-info').hide();
     $('.map-info').show();
     mainInterval = setInterval(walking, 200);
     statusBox.innerHTML = "Status: Walking";
@@ -427,6 +504,7 @@ function stopWalking(){
 };
 
 document.getElementById('buy-btn').disabled = false; // So I can buy items at beginning of game
+
 function stopAtStore () { // So I can buy items only when I arrive at a campsite with a store
     document.getElementById('buy-btn').disabled = true;
     camps.forEach(function(camp) {
@@ -452,16 +530,18 @@ function printRest(){
     statusBox.innerHTML = "Status: Resting";
 };
 
+
+
+
 function updateRestStats(){
-    party.food -= (2* party.hikers.length);
+    party.food -= (party.rations* party.hikers.length);
     days += 1
     for (i = 0; i < party.hikers.length; i++){
         party.hikers[i].health += 100;
     };
     getRandomWeather(); //update and print weather also (need to figure out how to deal with days)
-    remainingFoodCount.innerText = "Remaining Food: " + party.food + " lbs";
-    daysCount.innerText = "Days on Trail: " +days;
-    healthCount.innerText = "Health: " + party.health(); //party.healthString
+    countDays();
+    printStatsBox ();
 };
 
 // making buttons work;
@@ -471,13 +551,13 @@ continueButton.onclick = startWalking;
 var pauseButton = document.getElementById('pause-btn');
 pauseButton.onclick = stopWalking;
 
-var statusBox = document.getElementById('status-box');
 
 var restButton = document.getElementById('rest-btn');
 restButton.onclick = restOneDay;
 
 var mapButton = document.getElementById('map-btn');
 mapButton.onclick = mapButtonEvents;
+
 
 $('.map-info').show();
 function mapButtonEvents () {
@@ -503,7 +583,19 @@ function statusButtonEvents () {
 };
 
 var statusInfo = document.getElementById('status-info');
-statusInfo.innerHTML = "<div class= 'col-md-6'><br><b>Supplies:</b><br>Money: $"+party.money+"<br>Food (lbs): "+party.food+"<br>First Aid Kits: "+party.aid+"<br></div><div class= 'col-md-6'><br><b>Current Health:</b><br>"+party.hikers[0].name+": "+party.hikers[0].health+"<br></div>";
+statusInfo.innerHTML = "<div class= 'col-md-6'><br><b>Supplies:</b><br>Money: $"+party.money+"<br>Food (lbs): "+party.food+"<br>First Aid Kits: "+party.aid+"<br></div><div class= 'col-md-6'><br><b>Current Health:</b><br>"+ stringHikerStats +"<br></div>";
+
+
+//TODO: need to display individual stats
+function getIndividualHealth () {
+    party.hikers.forEach (function (){
+        iHikerStats.name = party.hikers.name;
+        iHikerStats.health = party.hikers.health;
+ });
+stringHikerStats = String(iHikerStats);
+};
+
+
 
 //start rations button and box
 var rationsButton = document.getElementById('rations-btn');
@@ -619,17 +711,17 @@ var fastButton = document.getElementById('fast-btn');
 fastButton.onclick = fastEvent;
 
 function slowEvent (){
-    party.pace = 1;
+    party.pace = 5;
     printStatsBox();
 };
 
 function normalEvent (){
-    party.pace = 2;
+    party.pace = 10;
     printStatsBox();
 };
 
 function fastEvent (){
-    party.pace = 3;
+    party.pace = 15;
     printStatsBox();
 };
 //end pace buttons box
@@ -637,7 +729,7 @@ function fastEvent (){
 
 function endMessage () { 
     if (miles >= Math.floor(camps[camps.length-1].distance)) {
-        printEvent.innerHTML = "<div class = 'center-text'>Congratulations! You have survived the John Muir Trail!</div><br>";
+        printEvent.innerHTML = "<div class = 'center-text'>Congratulations! You have survived! You completed the John Muir Trail in " + days + " days.</div><br>";
         $('.status-info').show();
         $('.map-info').hide();
     };
