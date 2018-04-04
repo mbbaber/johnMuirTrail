@@ -1,30 +1,52 @@
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P');
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P|VT323');
 body {
+    /*font-family: 'Press Start 2P', cursive;*/
+    font-family: 'VT323', monospace;
     margin: 25px 50px;
-    background-image: url("../img/dsc08270.jpg");
-    /*background-color: lightblue;*/
-    background-repeat: no-repeat;
-    background-size: 220vh 100vh;
+    background-color: lightblue;
+    background-image: url("../img/download.jpg");
+    
 }
-
+/*
+.bg {
+position: fixed; 
+  top: -50%; 
+  left: -50%; 
+  width: 100%; 
+  height: 100%;
+}
+#bg img {
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0; 
+  margin: auto; 
+  max-width: 110%;
+  max-height: 130%;
+}
+*/
 .bgimg {
     background-color: rgba(255, 255, 255, 0.7);
-    height: 25vh;
+    height: 30vh;
     border: 2px solid navy;
     border-bottom: 0px;
     border-radius: 10px 10px 0px 0px;
     font-size: 20px;
+    overflow-y: scroll;
 }
 
 .map {
     background-color: rgba(255, 255, 255, 0.7);
-    height: 25vh;
+    height: 30vh;
     border: 2px solid navy;
     border-bottom: 0px;
 }
 
 .event-log {
     background-color: rgba(255, 255, 255, 0.7);
-    height: 40vh;
+    height: 30vh;
     border: 2px solid navy;
     overflow-y: scroll;
     font-size: 16px;
@@ -32,13 +54,13 @@ body {
 }
 
 .vert-cent {
-    margin: 30px 0px;
+    margin: 10px 0px;
 }
 
 .vert-cent1 {
-    margin: 15px 0px;
+    margin: 10px 0px;
     background-color: rgba(255, 255, 255, 1);
-    padding: 10px;
+    padding: 5px;
     border: 2px solid navy;
     border-radius: 10px;
 }
@@ -51,7 +73,7 @@ body {
 
 
 .col-sm-4 {
-    margin-top:20px;
+    margin-top:0px;
     padding-left: 50px;
     font-size: 16px;
 }
@@ -66,13 +88,17 @@ body {
 }
 
 .pause-box {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .rations-info .pace-info {
     padding: 20px 10px;
 }
-
+.btn {
+    padding:8px;
+    height:auto;
+    width: 100%;
+}
 .btn-map {
     width: 120px;
     height: 40px;
@@ -97,5 +123,32 @@ body {
 }
 
 .red {
-    background-color: red;
+    color: red;
 }
+
+.icon {
+    font-size: 22px;
+}
+
+.canvas {
+    /*border: 2px solid orange;*/
+    width: 100%;
+    height: 10vh;
+};
+
+
+h1, h3 {
+    text-align: center;
+    margin-left: 10px;
+    margin-top: 0px;
+}
+
+/*height: auto;
+    padding:0;
+    background-size: cover;
+    background-size: 100vh 100vh;
+    background-repeat: no-repeat;
+    
+    width:100%;
+    background-position: center center;
+

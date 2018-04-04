@@ -1,8 +1,37 @@
+//TODO: 
+//NEED HELP
+//money and supplies in store need to update automatically 1) when health changes and 2) when stuff is bought
+// if food/health are low, HTML = red.
+// need to print individual health in status button
+// health and food should never be negative.
+// If I have 0 first aid kits, 0 food or 0 money, I cannot run events that make me loose that item...
+// Why is there a space after remaining food?!!! arrrhhhh
+// clean up code
+
+
+//MAGGIE:
+//scroll bars rounded
+//make animation
+//make is dying, is well again prompts
+//Hover message for disabled buttons
+//reached a camp with a store - needs to be centered
+//layout issue
+//change likelihood of events
+
+//Wish list: 
+//rest - can enter how many days
+//Can set characters
+//options to change levels
+//add metric system
+//weight for backpacks as variable that affects game play
+//points @ end & high scores
+//
+
+
 //constants
 var priceFood = 10 //$10 for 10lbs
 var priceAid = 5 //$5 for 1.
-var iHikerStats = {};
-var stringHikerStats;
+
 
 //Set up hiker stats (will be updated each mile of play, each day of play, and during events)
 function Party(food, money, pace, rations, hikers, aid){ 
@@ -70,12 +99,71 @@ function Hiker(name, health) {
     this.health = health;
 };
 
+var randomHiker1;
+var randomHiker2;
+var randomHiker3;
+var randomHiker4;
+var randomHiker5;
+
+//pick random hiker names from IronHack roster: 
+var IronHackRoster = ['Bertrand', 'Billy', 'Brianna', 'Clément', 'Arthur', 'Elise', 'J-B', 'Jeremie', 'Leo P.', 'Luke', 'Louis', 'Lucas', 'Maggie', 'Michael', 'Nizar', 'Patrycja', 'Renaud', 'Rodrigo', 'Vivian', 'Léo W.', 'Mostafa', 'Pierre', 'Sami'];
+function getRandomIronHacker () {
+    randomHiker1 = IronHackRoster[Math.floor(Math.random()*IronHackRoster.length)];
+    
+    for (var i=IronHackRoster.length-1; i>=0; i--) {
+        if (IronHackRoster[i] === randomHiker1) {
+        IronHackRoster.splice(i, 1); 
+        }
+    };
+    
+    randomHiker2 = IronHackRoster[Math.floor(Math.random()*IronHackRoster.length)];
+        
+    for (var i=IronHackRoster.length-1; i>=0; i--) {
+        if (IronHackRoster[i] === randomHiker2) {
+        IronHackRoster.splice(i, 1); 
+        }
+    };
+
+    randomHiker3 = IronHackRoster[Math.floor(Math.random()*IronHackRoster.length)];
+
+    for (var i=IronHackRoster.length-1; i>=0; i--) {
+        if (IronHackRoster[i] === randomHiker3) {
+        IronHackRoster.splice(i, 1); 
+        }
+    };
+
+    randomHiker4 = IronHackRoster[Math.floor(Math.random()*IronHackRoster.length)];
+
+    for (var i=IronHackRoster.length-1; i>=0; i--) {
+        if (IronHackRoster[i] === randomHiker4) {
+        IronHackRoster.splice(i, 1); 
+        }
+    };
+
+    randomHiker5 = IronHackRoster[Math.floor(Math.random()*IronHackRoster.length)];
+
+    console.log(randomHiker1)
+    console.log(randomHiker2)
+    console.log(randomHiker3)
+    console.log(randomHiker4)
+    console.log(randomHiker5)
+}
+    
+getRandomIronHacker();
+
+//Welcome Message
+var printEvent = document.getElementById('print-event');
+function welcomeMessage() {
+    printEvent.innerHTML ="<h1 class = 'center-text'>JOHN MUIR TRAIL</h1> <h3 class = 'center-text'> Welcome! <br><br> Your team: " +randomHiker1+ ", " +randomHiker2+ ", " +randomHiker3+ ', ' +randomHiker4+ ", " +randomHiker5+ "<br><br>Your goal is to survive 233 miles along the trail. <br><br>Most groups start by buying supplies. <br><br>You can check status, change rations, rest, and change pace along the way. <br><br>You can only buy supplies at campsites with stores. <br><br>BEWARE: Your actions may affect your health! <br><br>Ready, Set, Hike!</h3>"
+}
+welcomeMessage();
+
 //introduce hikers
-var hiker1 = new Hiker("Maggie", 100);
-var hiker2 = new Hiker("Louis", 100);
-var hiker3 = new Hiker("Hiker3", 100);
-var hiker4 = new Hiker("Hiker4", 100);
-var hiker5 = new Hiker("Hiker5", 100);
+var hiker1 = new Hiker(randomHiker1, 60);
+var hiker2 = new Hiker(randomHiker2, 60);
+var hiker3 = new Hiker(randomHiker3, 60);
+var hiker4 = new Hiker(randomHiker4, 60);
+var hiker5 = new Hiker(randomHiker5, 60);
 
 //create party array with hikers inside
 var party = new Party(50, 300, 10, 3,[hiker1, hiker2, hiker3, hiker4, hiker5], 1);
@@ -91,6 +179,9 @@ function subtractFood () {
         } else {
             party.food
         };
+    };
+    if (party.food <0) {
+        party.food = 0
     };
 };
     
@@ -159,7 +250,6 @@ var weather;
 //My Main Function (loops through miles of game and updates/prints events)
 function walking () {  // TODO: would like to clean this up eventually/combine functions
     if (miles <= camps[camps.length-1].distance){
-        
         printWalkingText(miles)
         printCamp(miles);
 
@@ -174,10 +264,11 @@ function walking () {  // TODO: would like to clean this up eventually/combine f
         adjustHikerStats();
 
         printDistanceBox();
-        printStatsBox();
+        
 
         getIndividualHealth();
 
+        printStatsBox();
         endMessage();
         miles++
     } else {
@@ -218,6 +309,9 @@ printNextCamp();
 printMilesText();
 };
 
+
+//TODO: if food/health are low, HTML = red.
+//TODO: health should never be negative
 //function for printing all informaiton that goes into stats box: pace, ration, health, remaining food
 function printStatsBox () {
     function printPace () {
@@ -228,19 +322,23 @@ function printStatsBox () {
     };
     function printHealth () {
         if (party.health() < 50){
-            healthCount.innerText = "<div class='red'>Health: " + party.health() + "</div>"; //party.healthString
+            healthCount.innerHTML = "<div class='red'>Health: " + party.health() + "</div>"; //party.healthString
+        } else if (party.health() < 0){
+            party.hikers.forEach (function (){
+                party.hikers.health = 0;
+            });
         } else {
-            healthCount.innerText = "Health: " + party.health(); //party.healthString
+            healthCount.innerHTML = "<div>Health: " + party.health()+ "</div>"; //party.healthString  
         }
     };
     function printRemainingFood() { //TODO: never have negative food count and never display negative food count.
         if (party.food >= 0){
-            remainingFoodCount.innerText = "Remaining Food: " + party.food + " lbs"; 
-            if (party.food < (party.hikers.length * party.ration*3)) {
-                remainingFoodCount.innerText = "<div class='red'>Remaining Food: " + party.food + " lbs</div>";
-            };
-        } else {
-            remainingFoodCount.innerText = "Remaining Food: 0 lbs"; 
+            remainingFoodCount.innerHTML = "<div> Remaining Food: " + party.food + " lbs </div>"; 
+        } else if (party.food < (party.hikers.length * party.rations*3)) {
+                remainingFoodCount.innerHMTL = "<div class='red'>Remaining Food: " + party.food + " lbs</div>";
+        } else if (party.food < 0){
+            party.food = 0;
+            remainingFoodCount.innerHMTL = "<div class='red'>Remaining Food: " + party.food + " lbs</div>"; 
         };
     };
 
@@ -314,7 +412,8 @@ function Camp (name, distance, store) {
 };
 
 // enter information for each camp
-var camp1 = new Camp("Half Dome Junction", 12.3, 0);
+
+var camp1 = new Camp("Half Dome Junction", 12.3, 0,);
 var camp2 = new Camp("Sunrise Camp", 19.9, 0);
 var camp3 = new Camp("Tuolume Meadows", 31.3, 1);
 var camp4 = new Camp("Upper Lyell Canyon", 40.8, 0);
@@ -370,7 +469,7 @@ function enableButtons () {
 
 //set up object constructor for event information: type (stat-change), notification (positive or negative), value (-/+ value to change in stats), stat (which stat will be changed), text (message to show);
 var statusBox = document.getElementById('status-box');
-var printEvent = document.getElementById('print-event');
+
 var newEvent;
 var yesOrNoInfo = document.getElementById('yesOrNo-info');
 var randomHiker;
@@ -445,8 +544,6 @@ function Event (type, notification, value, stat, text, stopHike) { //setting up 
 
 };
 
-
-
 // enter information for each event
 
 //food positive
@@ -480,11 +577,6 @@ var event15 = new Event('rest', 'negative', (-party.hikers.length), "food", " go
 var events = [];
 events.push(event1, event2, event3, event4, event5, event6, event7, event8, event9, event10, event11, event12, event13, event14, event15);
 
-
-
-
-
-
 var mainInterval;
 function startWalking(){
     $('.status-info').hide();
@@ -513,7 +605,7 @@ function stopAtStore () { // So I can buy items only when I arrive at a campsite
             clearInterval(mainInterval);
             statusBox.innerHTML = "Status: Stopped";
             document.getElementById('buy-btn').disabled = false;
-            printEvent.innerHTML = "You have reached a camp with a store.";
+            printEvent.innerHTML = "<div class = 'center-text'>You have reached a camp with a store.</div>";
         };
     });
 };  
@@ -530,14 +622,11 @@ function printRest(){
     statusBox.innerHTML = "Status: Resting";
 };
 
-
-
-
 function updateRestStats(){
     party.food -= (party.rations* party.hikers.length);
     days += 1
     for (i = 0; i < party.hikers.length; i++){
-        party.hikers[i].health += 100;
+        party.hikers[i].health += 5;
     };
     getRandomWeather(); //update and print weather also (need to figure out how to deal with days)
     countDays();
@@ -583,16 +672,15 @@ function statusButtonEvents () {
 };
 
 var statusInfo = document.getElementById('status-info');
-statusInfo.innerHTML = "<div class= 'col-md-6'><br><b>Supplies:</b><br>Money: $"+party.money+"<br>Food (lbs): "+party.food+"<br>First Aid Kits: "+party.aid+"<br></div><div class= 'col-md-6'><br><b>Current Health:</b><br>"+ stringHikerStats +"<br></div>";
-
 
 //TODO: need to display individual stats
 function getIndividualHealth () {
-    party.hikers.forEach (function (){
-        iHikerStats.name = party.hikers.name;
-        iHikerStats.health = party.hikers.health;
+    party.hikers.forEach (function (hiker){
+        var stringHikerStats = stringHikerStats + hiker.name + ": " + hiker.health + "<br>";
+
+        statusInfo.innerHTML = "<div class= 'col-md-6'><br><b>Supplies:</b><br>Money: $"+party.money+"<br>Food (lbs): "+party.food+"<br>First Aid Kits: "+party.aid+"<br></div><div class= 'col-md-6'><br><b>Current Health:</b><br>"+ stringHikerStats +"<br></div>";
  });
-stringHikerStats = String(iHikerStats);
+
 };
 
 
@@ -624,7 +712,6 @@ function bigMealEvent (){
     party.rations = 3;
     printStatsBox();
 };
-
 
 function normalMealEvent (){
     party.rations = 2;
@@ -729,9 +816,140 @@ function fastEvent (){
 
 function endMessage () { 
     if (miles >= Math.floor(camps[camps.length-1].distance)) {
-        printEvent.innerHTML = "<div class = 'center-text'>Congratulations! You have survived! You completed the John Muir Trail in " + days + " days.</div><br>";
+        printEvent.innerHTML = "<div class = 'center-text'><h1>Congratulations! You have survived!</h1><h3>You completed the John Muir Trail in " + days + " days.<h3></div>";
         $('.status-info').show();
         $('.map-info').hide();
+        statusBox.innerHTML = "Status: Completed";
     };
 };
 
+
+
+//starting CANVAS
+
+var canvas = document.querySelector('.canvas');
+
+canvas.width = window.innerWidth; 
+canvas.height = window.innerHeight;
+var ctx = canvas.getContext("2d");
+
+var personImg = new Image(); 
+personImg.src = "./img/littleHiker.png";
+
+var tentImg = new Image(); 
+tentImg.src = "./img/tent.png";
+
+var storeImg = new Image(); 
+storeImg.src = "./img/store.png";
+
+var drawingConstant = 4.5
+var xCamp = 0;
+
+
+
+personImg.onload = function () {
+    ctx.drawImage(personImg, 0, 300, personImg.width*0.35, personImg.height*2); 
+};
+    /*
+    ctx.drawImage(tentImg, 10, 80, tentImg.width*0.15, tentImg.height*0.7); 
+    ctx.drawImage(tentImg, 109.4, 80, tentImg.width*0.15, tentImg.height*0.7); 
+    ctx.drawImage(storeImg, 172.15, 0, storeImg.width*0.09, storeImg.height*0.5);
+    ctx.drawImage(tentImg, 224.4, 80, tentImg.width*0.15, tentImg.height*0.7); 
+    ctx.drawImage(tentImg, 277.8, 80, tentImg.width*0.15, tentImg.height*0.7); 
+    ctx.drawImage(storeImg, 366.9, 0, storeImg.width*0.09, storeImg.height*0.5); 
+    ctx.drawImage(tentImg, 416.4, 80, tentImg.width*0.15, tentImg.height*0.7); 
+    ctx.drawImage(tentImg, 484, 80, tentImg.width*0.15, tentImg.height*0.7); 
+    ctx.drawImage(tentImg, 548.9, 80, tentImg.width*0.15, tentImg.height*0.7); 
+    ctx.drawImage(tentImg, 616.55, 80, tentImg.width*0.15, tentImg.height*0.7); 
+    ctx.drawImage(storeImg, 668.8, 0, storeImg.width*0.09, storeImg.height*0.5); 
+    ctx.drawImage(tentImg, 727.0, 80, tentImg.width*0.15, tentImg.height*0.7); 
+    ctx.drawImage(tentImg, 794.2, 80, tentImg.width*0.15, tentImg.height*0.7); 
+    ctx.drawImage(tentImg, 856.3, 80, tentImg.width*0.15, tentImg.height*0.7); 
+    ctx.drawImage(tentImg, 922.3, 80, tentImg.width*0.15, tentImg.height*0.7); 
+    ctx.drawImage(storeImg, 986.1, 0, storeImg.width*0.09, storeImg.height*0.5); 
+    ctx.drawImage(tentImg, 1058.7, 80, tentImg.width*0.15, tentImg.height*0.7); 
+    ctx.drawImage(tentImg, 1058.7, 80, tentImg.width*0.15, tentImg.height*0.7); 
+    ctx.drawImage(tentImg, 1124.7, 80, tentImg.width*0.15, tentImg.height*0.7); 
+    ctx.drawImage(tentImg, 1191.3, 80, tentImg.width*0.15, tentImg.height*0.7); 
+    ctx.drawImage(tentImg, 1246.3, 80, tentImg.width*0.15, tentImg.height*0.7);  
+    ctx.drawImage(tentImg, 1283.7, 80, tentImg.width*0.15, tentImg.height*0.7); 
+
+
+var c = camps.forEach (function (camp) {
+ console.log(camp.distance*5);
+});
+
+*/
+
+
+ctx.fillStyle = "green";
+    ctx.fillRect(0, 300, 20, 800);
+    ctx.fillStyle = "black";
+    ctx.fillRect(1263, 400, 10, 100);
+    ctx.fillRect(1263, 600, 10, 100);
+    ctx.fillRect(1273, 300, 10, 100);
+    ctx.fillRect(1273, 500, 10, 100);
+    ctx.fillRect(1273, 700, 10, 100);
+    ctx.fillStyle = "grey";
+    ctx.fillRect(20,680, 1500, 10);
+    ctx.fillRect(20,300, 1500, 10);
+    ctx.fillStyle = "white";
+
+    ctx.fillRect(1263, 300, 10, 100);
+    ctx.fillRect(1263, 500, 10, 100);
+    ctx.fillRect(1263, 700, 10, 100);
+    
+    ctx.fillRect(1273, 400, 10, 100);
+    ctx.fillRect(1273, 600, 10, 100);
+    ctx.fillRect(1273, 800, 10, 100);
+
+/* canvas notes 
+var baseball = new Image();
+
+var drawFunc = function() {
+    //do animation logic
+    updateBall();
+
+    //draw new stuff
+    //draw new stuff
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(baseball, baseballX, baseballY);
+
+    //wait for next frame
+    //requestAnimationFrame(drawFunc);
+
+    //because the web is annoying, here's a hack to make it work
+    if (window.requestAnimationFrame) {
+        requestAnimationFrame(drawFunc);
+    } else if (window.webkitRequestAnimationFrame) {
+        webkitRequestAnimationFrame(drawFunc);
+    } else if (window.mozRequestAnimationFrame) {
+        mozRequestAnimationFrame(drawFunc);
+    }
+};
+
+baseball.onload = function() {
+    drawFunc();
+};
+baseball.src = "http://a3.mzstatic.com/us/r30/Purple6/v4/aa/65/fe/aa65fe9a-9a78-2abb-567c-d439c782d9c8/mzl.xwveiniy.175x175-75.jpg";
+
+//ball movement
+var baseballX = 0;
+var baseballY = 0;
+var lastTime = new Date().getTime();
+var speed = 0.25;
+
+var updateBall = function() {
+    //calculate time passed
+    var rightNow = new Date().getTime();
+    var elapsedTime = rightNow - lastTime;
+    lastTime = rightNow;
+
+    //animate
+    baseballX += speed * elapsedTime;
+    if (baseballX>300) baseballX = 0;
+
+    baseballY += speed * elapsedTime;
+    if (baseballY>425) baseballY = 0;
+}
+*/
