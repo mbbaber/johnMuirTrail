@@ -12,30 +12,32 @@
         
 <div class="container-fluid">
     <div class="row main">
+        
         <div class = "col-sm-2">
             <div class = "vert-cent">
                     
-              <button id= "map-btn" type="button" class="btn btn-default map-btn"><span class="glyphicon glyphicon-globe icon" aria-hidden="true"></span><br>Map</button>  
+              <button id= "map-btn" type="button" class="btn btn-primary map-btn"><span class="glyphicon glyphicon-road icon" aria-hidden="true"></span><br>Trail</button>  
             </div>
             <div class = "vert-cent">
-                <button id= "status-btn" type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus icon" aria-hidden="true"></span><br>Status</button>
+                <button id= "status-btn" type="button" class="btn btn-warning"><span class="glyphicon glyphicon-plus icon" aria-hidden="true"></span><br>Status</button>
             </div>
             <div class = "vert-cent">
-                <button id= "rations-btn" type="button" class="btn btn-default rations-btn"><span class="glyphicon glyphicon-cutlery icon" aria-hidden="true"></span><br>Rations</button>
+                <button id= "rations-btn" type="button" class="btn btn-success rations-btn"><span class="glyphicon glyphicon-cutlery icon" aria-hidden="true"></span><br>Rations</button>
             </div>
             <div class = "vert-cent">
-                <button id= "buy-btn" type="button" class="btn btn-default buy-btn"><span class="glyphicon glyphicon-usd icon" aria-hidden="true"></span><br>Buy</button> <!-- replace disabled w/ active makes it clickable -->
+                <button id= "buy-btn" type="button" class="btn btn-danger buy-btn"><span class="glyphicon glyphicon-usd icon" aria-hidden="true"></span><br>Buy</button> <!-- replace disabled w/ active makes it clickable -->
             </div>
             <div class = "vert-cent">
                 <button id= "rest-btn" type="button" class="btn btn-default"><span class="glyphicon glyphicon-bed icon" aria-hidden="true"></span><br>Rest</button>
             </div>
             <div class = "vert-cent">
-                <button id= "pace-btn" type="button" class="btn btn-default pace-btn"><span class="glyphicon glyphicon-road icon" aria-hidden="true"></span><br>Pace</button>
+                <button id= "pace-btn" type="button" class="btn btn-info pace-btn"><span class="glyphicon glyphicon-flash icon" aria-hidden="true"></span><br>Pace</button>
             </div>
         </div>
 
         <div class = "col-sm-6">
             <div class="row bgimg">
+                <br>
                     <span class = "event-text1 col-md-12" id= "print-event"></span>
                     <span class = "event-text1 col-md-12" id= "yesOrNo-info"></span>
             </div>
@@ -46,14 +48,15 @@
               
                 <div class="map-info"> 
                     <br>
-                    <br>
+
                     <canvas class = "canvas" width = "100" height = "1000" ></canvas>
                         
                 </div> 
 
                 <div id = "status-info" class="status-info">
-                   
-                    </div>
+                    <div class="col-md-6" id="status-supplies"></div>
+                    <div class="col-md-6" id="status-individual-health"></div>
+                </div>
 
                 <div id ="rations-info" class="rations-info">
                     <b>Rations</b> <br>
@@ -84,7 +87,7 @@
             </div>
         </div>
 
-        <div class = "col-sm-4">
+        <div id = 'right-col' class = "col-sm-3">
                 <div class = "conditions-box vert-cent1">
                     <div class ="center-text"><b>Conditions</b></div>
                     <span class = "stats-text1" id= "daysCount">Days on trail: 0</span><br>

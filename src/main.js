@@ -1,36 +1,35 @@
 //TODO: 
 //NEED HELP
-//money and supplies in store need to update automatically 1) when health changes and 2) when stuff is bought
-// if food/health are low, HTML = red.
-// need to print individual health in status button
-// health and food should never be negative.
-// If I have 0 first aid kits, 0 food or 0 money, I cannot run events that make me loose that item...
-// Why is there a space after remaining food?!!! arrrhhhh
+// money and supplies in store need to update automatically 1) when health changes and 2) when stuff is bought
 // clean up code
+// how to get . next to hiker to turn into trail (how to not clear it)
 
+//Current Tasks:
+//Money needs to decrease when supplies are bought
+//Events text should last longer so user can read
 
-//MAGGIE:
-//scroll bars rounded
-//make animation
-//make is dying, is well again prompts
+//when end, disable buttons
+//when game over, diasble buttons
+//game over - funny image
+//winner - fun image
+//status currently does not show @ beginning
+//enhance animations
 //Hover message for disabled buttons
-//reached a camp with a store - needs to be centered
 //layout issue
 //change likelihood of events
+//
 
 //Wish list: 
 //rest - can enter how many days
-//Can set characters
-//options to change levels
-//add metric system
-//weight for backpacks as variable that affects game play
-//points @ end & high scores
-//
-
+//Can set characters/occupation (determines how much money)
+//Options to change difficulty level
+//Add metric system
+//Weight for backpacks as variable that affects game play
+//Points & high scores list
 
 //constants
-var priceFood = 10 //$10 for 10lbs
-var priceAid = 5 //$5 for 1.
+var PRICE_FOOD = 10 //$10 for 10lbs
+var PRICE_AID = 5 //$5 for 1.
 
 
 //Set up hiker stats (will be updated each mile of play, each day of play, and during events)
@@ -84,7 +83,41 @@ function Party(food, money, pace, rations, hikers, aid){
             return "Fair"
         }else if (health > 25) {
             return "Poor"
-        }else if (health >0) {
+        }else if (health > 0) {
+            return "Dying"
+        } else if (health <= 0) {
+            return "Dead"
+        }else {
+            return "Cannot determine"
+        };
+    };
+
+    Party.prototype.removeHiker = function(hikerName) {
+        this.hikers = this.hikers.filter(function(hiker) {
+            return hiker.name !== hikerName;
+        });
+    }
+
+    Party.prototype.isStillAlive = function() {
+        return this.hikers.length > 0;
+    }
+};
+
+function Hiker(name, health) {
+    this.name = name;
+    this.health = health;
+
+    Hiker.prototype.healthString = function () { // set strings for health percentages.
+        var health = this.health;
+        if (health >= 100) {
+            return "Perfect"
+        } else if (health > 75) {
+            return "Good"
+        }else if (health > 50) {
+            return "Fair"
+        }else if (health > 25) {
+            return "Poor"
+        }else if (health > 0) {
             return "Dying"
         } else if (health <= 0) {
             return "Dead"
@@ -94,79 +127,113 @@ function Party(food, money, pace, rations, hikers, aid){
     };
 };
 
-function Hiker(name, health) {
-    this.name = name;
-    this.health = health;
-};
 
-var randomHiker1;
-var randomHiker2;
-var randomHiker3;
-var randomHiker4;
-var randomHiker5;
 
 //pick random hiker names from IronHack roster: 
-var IronHackRoster = ['Bertrand', 'Billy', 'Brianna', 'Clément', 'Arthur', 'Elise', 'J-B', 'Jeremie', 'Leo P.', 'Luke', 'Louis', 'Lucas', 'Maggie', 'Michael', 'Nizar', 'Patrycja', 'Renaud', 'Rodrigo', 'Vivian', 'Léo W.', 'Mostafa', 'Pierre', 'Sami'];
-function getRandomIronHacker () {
-    randomHiker1 = IronHackRoster[Math.floor(Math.random()*IronHackRoster.length)];
-    
-    for (var i=IronHackRoster.length-1; i>=0; i--) {
-        if (IronHackRoster[i] === randomHiker1) {
-        IronHackRoster.splice(i, 1); 
-        }
-    };
-    
-    randomHiker2 = IronHackRoster[Math.floor(Math.random()*IronHackRoster.length)];
-        
-    for (var i=IronHackRoster.length-1; i>=0; i--) {
-        if (IronHackRoster[i] === randomHiker2) {
-        IronHackRoster.splice(i, 1); 
-        }
-    };
+var IRON_HACK_ROSTER = ['Bertrand', 'Billy', 'Brianna', 'Clément', 'Arthur', 'Elise', 'J-B', 'Jeremie', 'Leo P.', 'Luke', 'Louis', 'Lucas', 'Maggie', 'Michael', 'Nizar', 'Patrycja', 'Renaud', 'Rodrigo', 'Vivian', 'Léo W.', 'Mostafa', 'Pierre', 'Sami'];
 
-    randomHiker3 = IronHackRoster[Math.floor(Math.random()*IronHackRoster.length)];
+function createRandomParty (numberHikers) {
+    var hikers = [];
+    var INITIAL_HEALTH = 60;
+    for(var i = 0; i < numberHikers; i++){
+        //randomly pick a name
+        var randomHikerPosition = Math.floor(Math.random() * IRON_HACK_ROSTER.length);
+        var name = IRON_HACK_ROSTER[randomHikerPosition];
 
-    for (var i=IronHackRoster.length-1; i>=0; i--) {
-        if (IronHackRoster[i] === randomHiker3) {
-        IronHackRoster.splice(i, 1); 
-        }
-    };
+        //remove hiker from the roster
+        IRON_HACK_ROSTER.splice(randomHikerPosition, 1);
 
-    randomHiker4 = IronHackRoster[Math.floor(Math.random()*IronHackRoster.length)];
+        //Create new hiker
+        var hiker = new Hiker(name, INITIAL_HEALTH);
 
-    for (var i=IronHackRoster.length-1; i>=0; i--) {
-        if (IronHackRoster[i] === randomHiker4) {
-        IronHackRoster.splice(i, 1); 
-        }
-    };
-
-    randomHiker5 = IronHackRoster[Math.floor(Math.random()*IronHackRoster.length)];
-
-    console.log(randomHiker1)
-    console.log(randomHiker2)
-    console.log(randomHiker3)
-    console.log(randomHiker4)
-    console.log(randomHiker5)
+        //Add hiker to party
+        hikers.push(hiker)
+    }
+    //Create the party with stats
+    return new Party(50, 300, 10, 3, hikers, 1);
 }
+
+var party = createRandomParty(5);
+
+// var randomHiker1;
+// var randomHiker2;
+// var randomHiker3;
+// var randomHiker4;
+// var randomHiker5;
+
+// function getRandomIronHacker () {
+//     randomHiker1 = IronHackRoster[Math.floor(Math.random()*IronHackRoster.length)];
     
-getRandomIronHacker();
+//     for (var i=IronHackRoster.length-1; i>=0; i--) {
+//         if (IronHackRoster[i] === randomHiker1) {
+//         IronHackRoster.splice(i, 1); 
+//         }
+//     };
+    
+//     randomHiker2 = IronHackRoster[Math.floor(Math.random()*IronHackRoster.length)];
+        
+//     for (var i=IronHackRoster.length-1; i>=0; i--) {
+//         if (IronHackRoster[i] === randomHiker2) {
+//         IronHackRoster.splice(i, 1); 
+//         }
+//     };
+
+//     randomHiker3 = IronHackRoster[Math.floor(Math.random()*IronHackRoster.length)];
+
+//     for (var i=IronHackRoster.length-1; i>=0; i--) {
+//         if (IronHackRoster[i] === randomHiker3) {
+//         IronHackRoster.splice(i, 1); 
+//         }
+//     };
+
+//     randomHiker4 = IronHackRoster[Math.floor(Math.random()*IronHackRoster.length)];
+
+//     for (var i=IronHackRoster.length-1; i>=0; i--) {
+//         if (IronHackRoster[i] === randomHiker4) {
+//         IronHackRoster.splice(i, 1); 
+//         }
+//     };
+
+//     randomHiker5 = IronHackRoster[Math.floor(Math.random()*IronHackRoster.length)];
+
+//     console.log(randomHiker1)
+//     console.log(randomHiker2)
+//     console.log(randomHiker3)
+//     console.log(randomHiker4)
+//     console.log(randomHiker5)
+// }
+    
+// getRandomIronHacker();
 
 //Welcome Message
 var printEvent = document.getElementById('print-event');
 function welcomeMessage() {
-    printEvent.innerHTML ="<h1 class = 'center-text'>JOHN MUIR TRAIL</h1> <h3 class = 'center-text'> Welcome! <br><br> Your team: " +randomHiker1+ ", " +randomHiker2+ ", " +randomHiker3+ ', ' +randomHiker4+ ", " +randomHiker5+ "<br><br>Your goal is to survive 233 miles along the trail. <br><br>Most groups start by buying supplies. <br><br>You can check status, change rations, rest, and change pace along the way. <br><br>You can only buy supplies at campsites with stores. <br><br>BEWARE: Your actions may affect your health! <br><br>Ready, Set, Hike!</h3>"
+    var teamNames = party.hikers.map(function(hiker) { return hiker.name }).join(", ");
+
+    printEvent.innerHTML = "<h1 class = 'center-text'>JOHN MUIR TRAIL</h1>"+
+        "<h3 class = 'center-text'> Welcome! <br><br>"+
+        "Team: " + teamNames + "<br><br>"+
+        "Your goal is to survive 233 miles along the trail. <br><br>"+
+        "Most groups start by buying supplies. <br><br>"+
+        "You can check status, change rations, rest, and change pace along the way. <br><br>"+
+        "You can only buy supplies at campsites with stores. <br><br>"+
+        "BEWARE: Your actions may affect your health! <br><br>Ready, Set, Hike!</h3>"
 }
 welcomeMessage();
 
 //introduce hikers
-var hiker1 = new Hiker(randomHiker1, 60);
-var hiker2 = new Hiker(randomHiker2, 60);
-var hiker3 = new Hiker(randomHiker3, 60);
-var hiker4 = new Hiker(randomHiker4, 60);
-var hiker5 = new Hiker(randomHiker5, 60);
+// var hiker1 = new Hiker(randomHiker1, 60);
+// var hiker2 = new Hiker(randomHiker2, 60);
+// var hiker3 = new Hiker(randomHiker3, 60);
+// var hiker4 = new Hiker(randomHiker4, 60);
+// var hiker5 = new Hiker(randomHiker5, 60);
 
 //create party array with hikers inside
-var party = new Party(50, 300, 10, 3,[hiker1, hiker2, hiker3, hiker4, hiker5], 1);
+// var party = new Party(50, 300, 10, 3,[hiker1, hiker2, hiker3, hiker4, hiker5], 1);
+
+
+
+
 
 function subtractFood () {
     if (miles %party.pace === 0) {
@@ -234,10 +301,36 @@ function adjustHikerStats () {
             }
         };
     };
+
+    function makeSureHealthIsValid() {
+        party.hikers.forEach(function(hiker){
+            if (hiker.health < 0) {
+                hiker.health = 0;
+            }
+            if (hiker.health > 100) {
+                hiker.health = 100;
+            }
+        })
+    }
+
+    function removeDeadHikers() {
+        party.hikers.forEach(function(hiker){
+            if (hiker.health <= 0) {
+                //Print the death event
+                printEvent.innerText = hiker.name + " had to be airlifted to the nearest hospital."
+
+                //remove hiker from party
+                party.removeHiker(hiker.name)
+            }
+        })
+    }
+
     adjustForWeather();
     adjustForPace();
     adjustForRation();
     adjustForFood();
+    makeSureHealthIsValid();
+    removeDeadHikers();
 };
 
 
@@ -265,12 +358,18 @@ function walking () {  // TODO: would like to clean this up eventually/combine f
 
         printDistanceBox();
         
-
         getIndividualHealth();
 
         printStatsBox();
+
+        if (!party.isStillAlive()) {
+            printEvent.innerText = "GAME OVER, no one in your party made it to the end of the trail.";
+            //Disable the buttons walk/stop
+            //...
+        }
         endMessage();
         miles++
+        updateCanvas();
     } else {
         clearInterval(mainInterval);
     }
@@ -310,8 +409,6 @@ printMilesText();
 };
 
 
-//TODO: if food/health are low, HTML = red.
-//TODO: health should never be negative
 //function for printing all informaiton that goes into stats box: pace, ration, health, remaining food
 function printStatsBox () {
     function printPace () {
@@ -321,31 +418,35 @@ function printStatsBox () {
         rationCount.innerText = "Ration: " + party.rationString();
     };
     function printHealth () {
-        if (party.health() < 50){
-            healthCount.innerHTML = "<div class='red'>Health: " + party.health() + "</div>"; //party.healthString
-        } else if (party.health() < 0){
-            party.hikers.forEach (function (){
-                party.hikers.health = 0;
-            });
+        //create a true/false flag we can test against
+        var partyIsHealthy = party.health() >= 50;
+
+        if (partyIsHealthy){
+            healthCount.className = "";
         } else {
-            healthCount.innerHTML = "<div>Health: " + party.health()+ "</div>"; //party.healthString  
+            healthCount.className = "red";
         }
+        healthCount.innerText = "Health: " + party.healthString() + " ("+party.health()+")" 
     };
     function printRemainingFood() { //TODO: never have negative food count and never display negative food count.
-        if (party.food >= 0){
-            remainingFoodCount.innerHTML = "<div> Remaining Food: " + party.food + " lbs </div>"; 
-        } else if (party.food < (party.hikers.length * party.rations*3)) {
-                remainingFoodCount.innerHMTL = "<div class='red'>Remaining Food: " + party.food + " lbs</div>";
-        } else if (party.food < 0){
-            party.food = 0;
-            remainingFoodCount.innerHMTL = "<div class='red'>Remaining Food: " + party.food + " lbs</div>"; 
-        };
+        //create a true/false flag we can test against
+        var mealsPerDay = 3;
+        var thereIsEnoughFood = party.food >= (party.hikers.length * party.rations * mealsPerDay);
+        //We make sure we don't have negative food
+        var remainingFood = party.food > 0 ? party.food : 0;
+
+        if (thereIsEnoughFood){
+            remainingFoodCount.className = "";
+        } else {
+            remainingFoodCount.className = "red";
+        }
+        remainingFoodCount.innerText = "Remaining Food: " + remainingFood + " lbs"
     };
 
-printPace();
-printRation();
-printHealth();
-printRemainingFood();
+    printPace();
+    printRation();
+    printHealth();
+    printRemainingFood();
 };
 
 //changes weather every 10 mile, defined as 1 day;
@@ -489,6 +590,15 @@ function Event (type, notification, value, stat, text, stopHike) { //setting up 
         if (this.type === 'stat-change') {
             if (this.stat === 'health'){
                 randomHiker.health += this.value;
+            } else if (this.stat == 'aid' && party.aid <= 0){
+                //do nothing and don't display anything
+                text = "";
+            } else if (this.stat == 'money' && party.money <= 0){
+                //do nothing and don't display anything
+                text = "";
+            } else if (this.stat == 'food' && party.food <= 0) {
+                //do nothing and don't display anything
+                text = "";
             } else {
                 party[this.stat] += this.value;
             }
@@ -521,7 +631,7 @@ function Event (type, notification, value, stat, text, stopHike) { //setting up 
             text = randomHiker.name + this.text;
             stopWalking();
             if ((party.aid > 0) && (this.stat === 'health')) {
-                yesOrNoInfo.innerHTML = "<div id = 'yesOrNo-info' class= 'yesOrNo-info col-md-12'><b>Would you like to use a first-aid kit?</b><br><button class = 'col-sm-6'id= 'yes-btn' type='button' class='btn-default btn-sm'>Yes</button><br><button class = 'col-sm-6' id= 'no-btn' type='button' class='btn-default btn-sm'>No</button>";
+                yesOrNoInfo.innerHTML = "<div id = 'yesOrNo-info' class= 'yesOrNo-info col-md-12'><b>Would you like to use a first-aid kit?</b><br><span><button class = '.btn-sm btn-success 'id= 'yes-btn' type='button'>Yes</button><button class = '.btn-sm btn-danger' id= 'no-btn' type='button'>No </button></span>";
                 var yesButton = document.getElementById('yes-btn');
                 var noButton = document.getElementById('no-btn');
                 disableButtons();
@@ -564,7 +674,7 @@ var event10 = new Event('user-input', 'negative', -7.5, 'health', " drank downst
 var event11 = new Event('stat-change', 'negative', -10, 'health', " is exhausted from walking.");
 
 //lost supplies
-var event12 = new Event ('stat-change', 'negative', -1, 'first-aid', "'s backpack got wet and a first aid kit was ruined.");
+var event12 = new Event ('stat-change', 'negative', -1, 'aid', "'s backpack got wet and a first aid kit was ruined.");
 var event13 = new Event ('stat-change', 'negative', -50, 'money', "'s backpack broke and $50 was lost.");
 
 
@@ -673,14 +783,25 @@ function statusButtonEvents () {
 
 var statusInfo = document.getElementById('status-info');
 
-//TODO: need to display individual stats
+
 function getIndividualHealth () {
+
+    //We get the first column of the status-info box and write the HTML for each supply (easier than creating a div everytime)
+    var supplyColumn = document.getElementById("status-supplies");
+    supplyColumn.innerHTML= "<b>Supplies:</b><br/>"+
+        "Money: $"+party.money+"<br/>"+
+        "Food (lbs): "+party.food+"<br/>"+
+        "First Aid Kits: "+party.aid+"<br/>";
+
+    //We get the individual health column
+    var individualHealthColumn = document.getElementById("status-individual-health");
+    //We edit the inner HTML appending a new line for each hiker
+    var innerHTML = "<b>Health of the team:</b><br/>"
     party.hikers.forEach (function (hiker){
-        var stringHikerStats = stringHikerStats + hiker.name + ": " + hiker.health + "<br>";
-
-        statusInfo.innerHTML = "<div class= 'col-md-6'><br><b>Supplies:</b><br>Money: $"+party.money+"<br>Food (lbs): "+party.food+"<br>First Aid Kits: "+party.aid+"<br></div><div class= 'col-md-6'><br><b>Current Health:</b><br>"+ stringHikerStats +"<br></div>";
- });
-
+        innerHTML += (hiker.name + ": " + hiker.healthString() + " ("+hiker.health+")<br/>");
+    });
+    //We change the DOM once here
+    individualHealthColumn.innerHTML = innerHTML;
 };
 
 
@@ -739,16 +860,16 @@ function buyButtonEvents () {
 };
 
 var buyInfo = document.getElementById('buy-info');
-buyInfo.innerHTML = "<div class = 'col-md-9'><br><b>Store:</b> <br> <button id= 'buy-food-btn' type='button' class='btn-default btn-sm'>Buy</button>  10 lbs of food: $" +priceFood+ " <br><button id= 'buy-aid-btn' type='button' class='btn-default btn-sm'>Buy</button>  1 First Aid Kit: $" +priceAid+"</div><div class ='col-md-3' right-align'><br><b>Money: $"+party.money+"<b><div>"
+buyInfo.innerHTML = "<div class = 'col-md-9'><br><b>Store:</b> <br> <button id= 'buy-food-btn' type='button' class='btn-default btn-sm'>Buy</button>  10 lbs of food: $" +PRICE_FOOD+ " <br><button id= 'buy-aid-btn' type='button' class='btn-default btn-sm'>Buy</button>  1 First Aid Kit: $" +PRICE_AID+"</div><div class ='col-md-3' right-align'><br><b>Money: $"+party.money+"<b><div>"
 
 var buyFood = document.getElementById('buy-food-btn');
 buyFood.onclick = buyFoodEvents;
 
 function buyFoodEvents (){
-    if (party.money >= priceFood) {
+    if (party.money >= PRICE_FOOD) {
         printEvent.innerHTML = ' ';
         party.food += 10;
-        party.money -= priceFood;
+        party.money -= PRICE_FOOD;
         printStatsBox(); 
     } else {
         printEvent.innerHTML = "<div class = 'center-text'>You don't have enough money for this item.</div><br>"
@@ -759,10 +880,10 @@ var buyAid = document.getElementById('buy-aid-btn');
 buyAid.onclick = buyAidEvents;
 
 function buyAidEvents (){
-    if (party.money >= priceAid) { 
+    if (party.money >= PRICE_AID) { 
         printEvent.innerHTML = ' ';
         party.aid += 1;
-        party.money -= priceAid;
+        party.money -= PRICE_AID;
         //print price
     } else {
         printEvent.innerHTML = "<div class = 'center-text'>You don't have enough money for this item.</div><br>"
@@ -842,114 +963,52 @@ tentImg.src = "./img/tent.png";
 var storeImg = new Image(); 
 storeImg.src = "./img/store.png";
 
-var drawingConstant = 4.5
+var drawingConstant = 5
 var xCamp = 0;
 
-
-
-personImg.onload = function () {
-    ctx.drawImage(personImg, 0, 300, personImg.width*0.35, personImg.height*2); 
+function clearCanvas () {
+    ctx.clearRect(0,0, canvas.width, canvas.height);//clear everything before starting to draw 
 };
-    /*
-    ctx.drawImage(tentImg, 10, 80, tentImg.width*0.15, tentImg.height*0.7); 
-    ctx.drawImage(tentImg, 109.4, 80, tentImg.width*0.15, tentImg.height*0.7); 
-    ctx.drawImage(storeImg, 172.15, 0, storeImg.width*0.09, storeImg.height*0.5);
-    ctx.drawImage(tentImg, 224.4, 80, tentImg.width*0.15, tentImg.height*0.7); 
-    ctx.drawImage(tentImg, 277.8, 80, tentImg.width*0.15, tentImg.height*0.7); 
-    ctx.drawImage(storeImg, 366.9, 0, storeImg.width*0.09, storeImg.height*0.5); 
-    ctx.drawImage(tentImg, 416.4, 80, tentImg.width*0.15, tentImg.height*0.7); 
-    ctx.drawImage(tentImg, 484, 80, tentImg.width*0.15, tentImg.height*0.7); 
-    ctx.drawImage(tentImg, 548.9, 80, tentImg.width*0.15, tentImg.height*0.7); 
-    ctx.drawImage(tentImg, 616.55, 80, tentImg.width*0.15, tentImg.height*0.7); 
-    ctx.drawImage(storeImg, 668.8, 0, storeImg.width*0.09, storeImg.height*0.5); 
-    ctx.drawImage(tentImg, 727.0, 80, tentImg.width*0.15, tentImg.height*0.7); 
-    ctx.drawImage(tentImg, 794.2, 80, tentImg.width*0.15, tentImg.height*0.7); 
-    ctx.drawImage(tentImg, 856.3, 80, tentImg.width*0.15, tentImg.height*0.7); 
-    ctx.drawImage(tentImg, 922.3, 80, tentImg.width*0.15, tentImg.height*0.7); 
-    ctx.drawImage(storeImg, 986.1, 0, storeImg.width*0.09, storeImg.height*0.5); 
-    ctx.drawImage(tentImg, 1058.7, 80, tentImg.width*0.15, tentImg.height*0.7); 
-    ctx.drawImage(tentImg, 1058.7, 80, tentImg.width*0.15, tentImg.height*0.7); 
-    ctx.drawImage(tentImg, 1124.7, 80, tentImg.width*0.15, tentImg.height*0.7); 
-    ctx.drawImage(tentImg, 1191.3, 80, tentImg.width*0.15, tentImg.height*0.7); 
-    ctx.drawImage(tentImg, 1246.3, 80, tentImg.width*0.15, tentImg.height*0.7);  
-    ctx.drawImage(tentImg, 1283.7, 80, tentImg.width*0.15, tentImg.height*0.7); 
+
+function updateCanvas () {
+    // personX += 1;
+    clearCanvas();
+    drawBackgroundMap()
+    drawHiker();
+    drawTents();
+    //...
+};
+
+personImg.onload = updateCanvas;
 
 
-var c = camps.forEach (function (camp) {
- console.log(camp.distance*5);
-});
+function drawHiker() {
+    var hikerX = miles * drawingConstant;
+    ctx.drawImage(personImg, hikerX, 150, personImg.width*0.35, personImg.height); 
+};
 
-*/
+function drawTents() {
 
+    camps.forEach(function(camp) {
+        
+        var logo = tentImg;
+        var height = logo.height*0.5;
+        var width = logo.width*0.15;
 
-ctx.fillStyle = "green";
-    ctx.fillRect(0, 300, 20, 800);
+        if (camp.store == true) {// == checks that the VALUE is the same (1 == true), === checks that they are the SAME (1===1) (1 !== true)
+            logo = storeImg;
+            height = logo.height*0.25;
+            width = logo.width*0.09;
+        }
+
+        var campX = camp.distance * drawingConstant + width;
+        ctx.drawImage(logo, campX, 50, width, height); 
+    })
+
+};
+
+function drawBackgroundMap() {
+    var dotX = miles * drawingConstant;
     ctx.fillStyle = "black";
-    ctx.fillRect(1263, 400, 10, 100);
-    ctx.fillRect(1263, 600, 10, 100);
-    ctx.fillRect(1273, 300, 10, 100);
-    ctx.fillRect(1273, 500, 10, 100);
-    ctx.fillRect(1273, 700, 10, 100);
-    ctx.fillStyle = "grey";
-    ctx.fillRect(20,680, 1500, 10);
-    ctx.fillRect(20,300, 1500, 10);
-    ctx.fillStyle = "white";
-
-    ctx.fillRect(1263, 300, 10, 100);
-    ctx.fillRect(1263, 500, 10, 100);
-    ctx.fillRect(1263, 700, 10, 100);
-    
-    ctx.fillRect(1273, 400, 10, 100);
-    ctx.fillRect(1273, 600, 10, 100);
-    ctx.fillRect(1273, 800, 10, 100);
-
-/* canvas notes 
-var baseball = new Image();
-
-var drawFunc = function() {
-    //do animation logic
-    updateBall();
-
-    //draw new stuff
-    //draw new stuff
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(baseball, baseballX, baseballY);
-
-    //wait for next frame
-    //requestAnimationFrame(drawFunc);
-
-    //because the web is annoying, here's a hack to make it work
-    if (window.requestAnimationFrame) {
-        requestAnimationFrame(drawFunc);
-    } else if (window.webkitRequestAnimationFrame) {
-        webkitRequestAnimationFrame(drawFunc);
-    } else if (window.mozRequestAnimationFrame) {
-        mozRequestAnimationFrame(drawFunc);
-    }
+    ctx.fillRect(dotX,315, 5, 15);
 };
-
-baseball.onload = function() {
-    drawFunc();
-};
-baseball.src = "http://a3.mzstatic.com/us/r30/Purple6/v4/aa/65/fe/aa65fe9a-9a78-2abb-567c-d439c782d9c8/mzl.xwveiniy.175x175-75.jpg";
-
-//ball movement
-var baseballX = 0;
-var baseballY = 0;
-var lastTime = new Date().getTime();
-var speed = 0.25;
-
-var updateBall = function() {
-    //calculate time passed
-    var rightNow = new Date().getTime();
-    var elapsedTime = rightNow - lastTime;
-    lastTime = rightNow;
-
-    //animate
-    baseballX += speed * elapsedTime;
-    if (baseballX>300) baseballX = 0;
-
-    baseballY += speed * elapsedTime;
-    if (baseballY>425) baseballY = 0;
-}
-*/

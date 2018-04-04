@@ -3,54 +3,35 @@
 body {
     /*font-family: 'Press Start 2P', cursive;*/
     font-family: 'VT323', monospace;
-    margin: 25px 50px;
+    margin: 50px 0px 50px 100px;
     background-color: lightblue;
     background-image: url("../img/download.jpg");
     
 }
-/*
-.bg {
-position: fixed; 
-  top: -50%; 
-  left: -50%; 
-  width: 100%; 
-  height: 100%;
-}
-#bg img {
-  position: absolute; 
-  top: 0; 
-  left: 0; 
-  right: 0; 
-  bottom: 0; 
-  margin: auto; 
-  max-width: 110%;
-  max-height: 130%;
-}
-*/
+
 .bgimg {
     background-color: rgba(255, 255, 255, 0.7);
     height: 30vh;
-    border: 2px solid navy;
+    border: 2px solid grey;
     border-bottom: 0px;
-    border-radius: 10px 10px 0px 0px;
-    font-size: 20px;
+    font-size: 25px;
     overflow-y: scroll;
 }
 
 .map {
     background-color: rgba(255, 255, 255, 0.7);
     height: 30vh;
-    border: 2px solid navy;
+    border: 2px solid grey;
     border-bottom: 0px;
 }
 
 .event-log {
     background-color: rgba(255, 255, 255, 0.7);
     height: 30vh;
-    border: 2px solid navy;
+    border: 2px solid grey;
     overflow-y: scroll;
     font-size: 16px;
-    border-radius: 0px 0px 10px 10px;
+   
 }
 
 .vert-cent {
@@ -61,23 +42,40 @@ position: fixed;
     margin: 10px 0px;
     background-color: rgba(255, 255, 255, 1);
     padding: 5px;
-    border: 2px solid navy;
+    padding-left: 15px;
+    border: 2px solid grey;
     border-radius: 10px;
+    align-items: center;
 }
+
 
 .btn {
     width: 100%;
     height: 50px;
     border-radius: 10px;
 }
-
-
-.col-sm-4 {
+.btn {
+    padding:8px;
+    height:auto;
+    width: 100%;
+    font-size: 18px;
+}
+#right-col {
     margin-top:0px;
     padding-left: 50px;
-    font-size: 16px;
+    font-size: 20px;
 }
 
+#no-btn {
+    padding: 1px 11px 2px 11px;
+}
+.col-sm-4 {
+
+}
+
+.yesOrNo-info {
+    text-align: center;
+}
 .col-sm-2 {
     padding-right: 50px;
 }
@@ -94,11 +92,7 @@ position: fixed;
 .rations-info .pace-info {
     padding: 20px 10px;
 }
-.btn {
-    padding:8px;
-    height:auto;
-    width: 100%;
-}
+
 .btn-map {
     width: 120px;
     height: 40px;
@@ -115,7 +109,7 @@ position: fixed;
 }
 
 .col-sm-6 {
-    font-size: 14px;
+    font-size: 18px;
 }
 
 .right-align {
@@ -133,7 +127,7 @@ position: fixed;
 .canvas {
     /*border: 2px solid orange;*/
     width: 100%;
-    height: 10vh;
+    height: 20vh;
 };
 
 
