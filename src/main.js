@@ -1,19 +1,25 @@
 //TODO: 
-//NEED HELP
+//PROBLEMS I FIXED
+// clean up code  => ongoing but better
+// how to get . next to hiker to turn into trail. => DONE
 // money and supplies in store need to update automatically 1) when health changes and 2) when stuff is bought
-// clean up code
-// how to get . next to hiker to turn into trail (how to not clear it)
+// trail left behind guy => DONE! 
+//when end, disable buttons => DONE!
+//when game over, diasble buttons => DONE! (need to test)
+//status currently does not show @ beginning => FIXED!
+//Events text should last longer so user can read => just called stop walking for each event
+// health: "dying", print when game over instead of health.string =NAN => DONE.
+//right now when you rest with no food, you dont die => FIXED!
 
+
+//NEED HELP
+// Right now can only click buy buttons 1 time.// maybe i should just redo shopping cart?
+    
 //Current Tasks:
-//Money needs to decrease when supplies are bought
-//Events text should last longer so user can read
 
-//when end, disable buttons
-//when game over, diasble buttons
 //game over - funny image
-//winner - fun image
-//status currently does not show @ beginning
-//enhance animations
+//winner - fun image/animations
+
 //Hover message for disabled buttons
 //layout issue
 //change likelihood of events
@@ -134,7 +140,7 @@ var IRON_HACK_ROSTER = ['Bertrand', 'Billy', 'Brianna', 'Clément', 'Arthur', 'E
 
 function createRandomParty (numberHikers) {
     var hikers = [];
-    var INITIAL_HEALTH = 60;
+    var INITIAL_HEALTH = 1;
     for(var i = 0; i < numberHikers; i++){
         //randomly pick a name
         var randomHikerPosition = Math.floor(Math.random() * IRON_HACK_ROSTER.length);
@@ -258,7 +264,7 @@ function adjustHikerStats () {
     function adjustForWeather (){ // hikers health decreases in poor weather (and inverse);
         for (i = 0; i < party.hikers.length; i++){
             if (weather === "Sunny") {
-                party.hikers[i].health += 1;
+                party.hikers[i].health;
             } else if (weather === "Rainy") {
                 party.hikers[i].health -= 1;
             } else if (weather === "Snowy") {
@@ -285,12 +291,14 @@ function adjustHikerStats () {
     };
     function adjustForRation (){ // if hikers eat well, they get healthier (and inverse)
         for (i = 0; i < party.hikers.length; i++){
-            if (party.rations === 3) {
-                party.hikers[i].health += 1;
-            } else if (party.rations === 1) {
-                party.hikers[i].health -= 1;
-            } else {
-                party.hikers[i].health;
+            if (party.food > 0) {
+                if (party.rations === 3) {
+                    party.hikers[i].health += 1;
+                } else if (party.rations === 1) {
+                    party.hikers[i].health -= 1;
+                } else {
+                    party.hikers[i].health;
+                };
             };
         };
     };
@@ -317,13 +325,13 @@ function adjustHikerStats () {
         party.hikers.forEach(function(hiker){
             if (hiker.health <= 0) {
                 //Print the death event
-                printEvent.innerText = hiker.name + " had to be airlifted to the nearest hospital."
-
+                printEvent.innerText = hiker.name + "'s health is too low to continue.  " + hiker.name + " has been airlifted to the nearest hospital."
+                stopWalking();
                 //remove hiker from party
                 party.removeHiker(hiker.name)
             }
         })
-    }
+    };
 
     adjustForWeather();
     adjustForPace();
@@ -333,8 +341,6 @@ function adjustHikerStats () {
     removeDeadHikers();
 };
 
-
-//TODO: put @ top of page;
 var miles = 0;
 var totalMiles = 0;
 var days = 0;
@@ -363,9 +369,8 @@ function walking () {  // TODO: would like to clean this up eventually/combine f
         printStatsBox();
 
         if (!party.isStillAlive()) {
-            printEvent.innerText = "GAME OVER, no one in your party made it to the end of the trail.";
-            //Disable the buttons walk/stop
-            //...
+            printEvent.innerText = "GAME OVER, everyone in your party was airlifted from the John Muir Trail and was taken to the nearest hospital.";
+            disableButtons();
         }
         endMessage();
         miles++
@@ -420,13 +425,16 @@ function printStatsBox () {
     function printHealth () {
         //create a true/false flag we can test against
         var partyIsHealthy = party.health() >= 50;
-
-        if (partyIsHealthy){
-            healthCount.className = "";
+        if (party.hikers.length > 0){ 
+            if (partyIsHealthy){
+                healthCount.className = "";
+            } else { 
+                healthCount.className = "red"; 
+            }
+            healthCount.innerText = "Health: " + party.healthString() + " ("+party.health()+")" 
         } else {
-            healthCount.className = "red";
-        }
-        healthCount.innerText = "Health: " + party.healthString() + " ("+party.health()+")" 
+            healthCount.innerText = "Health: Dying" 
+        }  
     };
     function printRemainingFood() { //TODO: never have negative food count and never display negative food count.
         //create a true/false flag we can test against
@@ -587,6 +595,7 @@ function Event (type, notification, value, stat, text, stopHike) { //setting up 
     Event.prototype.changeStats = function() {
         randomHiker = party.hikers[Math.floor(Math.random() * party.hikers.length)];
         text = randomHiker.name + this.text;
+        stopWalking();
         if (this.type === 'stat-change') {
             if (this.stat === 'health'){
                 randomHiker.health += this.value;
@@ -736,7 +745,7 @@ function updateRestStats(){
     party.food -= (party.rations* party.hikers.length);
     days += 1
     for (i = 0; i < party.hikers.length; i++){
-        party.hikers[i].health += 5;
+        party.hikers[i].health += 2;
     };
     getRandomWeather(); //update and print weather also (need to figure out how to deal with days)
     countDays();
@@ -779,10 +788,10 @@ function statusButtonEvents () {
     $('.buy-info').hide();
     $('.pace-info').hide();
     $('.status-info').show();
+    getIndividualHealth();
 };
 
 var statusInfo = document.getElementById('status-info');
-
 
 function getIndividualHealth () {
 
@@ -871,6 +880,8 @@ function buyFoodEvents (){
         party.food += 10;
         party.money -= PRICE_FOOD;
         printStatsBox(); 
+        //update price
+        buyInfo.innerHTML = "<div class = 'col-md-9'><br><b>Store:</b> <br> <button id= 'buy-food-btn' type='button' class='btn-default btn-sm'>Buy</button>  10 lbs of food: $" +PRICE_FOOD+ " <br><button id= 'buy-aid-btn' type='button' class='btn-default btn-sm'>Buy</button>  1 First Aid Kit: $" +PRICE_AID+"</div><div class ='col-md-3' right-align'><br><b>Money: $"+party.money+"<b><div>"
     } else {
         printEvent.innerHTML = "<div class = 'center-text'>You don't have enough money for this item.</div><br>"
     }
@@ -884,12 +895,11 @@ function buyAidEvents (){
         printEvent.innerHTML = ' ';
         party.aid += 1;
         party.money -= PRICE_AID;
-        //print price
+        buyInfo.innerHTML = "<div class = 'col-md-9'><br><b>Store:</b> <br> <button id= 'buy-food-btn' type='button' class='btn-default btn-sm'>Buy</button>  10 lbs of food: $" +PRICE_FOOD+ " <br><button id= 'buy-aid-btn' type='button' class='btn-default btn-sm'>Buy</button>  1 First Aid Kit: $" +PRICE_AID+"</div><div class ='col-md-3' right-align'><br><b>Money: $"+party.money+"<b><div>"
     } else {
         printEvent.innerHTML = "<div class = 'center-text'>You don't have enough money for this item.</div><br>"
     }
 };
-
 
 // if @ mile X, stop game and print "You have reached a store. Click buy to purchase supplies."
 // if @ mile X, buyButton.removeClass('disabled')
@@ -941,6 +951,7 @@ function endMessage () {
         $('.status-info').show();
         $('.map-info').hide();
         statusBox.innerHTML = "Status: Completed";
+        disableButtons();
     };
 };
 
@@ -1010,5 +1021,5 @@ function drawTents() {
 function drawBackgroundMap() {
     var dotX = miles * drawingConstant;
     ctx.fillStyle = "black";
-    ctx.fillRect(dotX,315, 5, 15);
+    ctx.fillRect(5,315, dotX, 15); //ADJUST LENGTH!!!
 };
