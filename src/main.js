@@ -1,35 +1,28 @@
-//TODO: 
+
 //PROBLEMS I FIXED
 // clean up code  => ongoing but better
 // how to get . next to hiker to turn into trail. => DONE
 // money and supplies in store need to update automatically 1) when health changes and 2) when stuff is bought
 // trail left behind guy => DONE! 
-//when end, disable buttons => DONE!
-//when game over, diasble buttons => DONE! (need to test)
-//status currently does not show @ beginning => FIXED!
-//Events text should last longer so user can read => just called stop walking for each event
+// when end, disable buttons => DONE!
+// when game over, diasble buttons => DONE! (need to test)
+// status currently does not show @ beginning => FIXED!
+// Events text should last longer so user can read => just called stop walking for each event
 // health: "dying", print when game over instead of health.string =NAN => DONE.
-//right now when you rest with no food, you dont die => FIXED!
-
+// right now when you rest with no food, you dont die => FIXED!
+// make PP presentation => DONE
 
 //NEED HELP
-// Right now can only click buy buttons 1 time.// maybe i should just redo shopping cart?
-    
-//Current Tasks:
+// Tried to redo shopping cart, but 1) it doesn't look right 2) it's not really working...  
 
-//game over - funny image
-//winner - fun image/animations
+// Current Tasks:
+// change likelihood of events
+// game over - animations (thumbs down and fever face drop down)
+// winner - fun animations (ballons, smiley, and confetti drop down);
+// helocopter when someone is air lifted
+// layout issue - can do Fri morn.
 
-//Hover message for disabled buttons
-//layout issue
-//change likelihood of events
-//
 
-//Wish list: 
-//rest - can enter how many days
-//Can set characters/occupation (determines how much money)
-//Options to change difficulty level
-//Add metric system
 //Weight for backpacks as variable that affects game play
 //Points & high scores list
 
@@ -238,9 +231,6 @@ welcomeMessage();
 // var party = new Party(50, 300, 10, 3,[hiker1, hiker2, hiker3, hiker4, hiker5], 1);
 
 
-
-
-
 function subtractFood () {
     if (miles %party.pace === 0) {
         if (party.rations === 3) {
@@ -371,6 +361,7 @@ function walking () {  // TODO: would like to clean this up eventually/combine f
         if (!party.isStillAlive()) {
             printEvent.innerText = "GAME OVER, everyone in your party was airlifted from the John Muir Trail and was taken to the nearest hospital.";
             disableButtons();
+            deathAnimation();
         }
         endMessage();
         miles++
@@ -467,7 +458,7 @@ function getRandomWeatherByDay (miles){ //assuming day = 10miles
 //creates function that changes weather every day and writes result in HTML.
 function getRandomWeather (){
         var num=Math.random();
-        if(num < 0.5) weather = "Sunny";  //probability 0.5
+        if(num < 0.5) weather = "Rainy";  //probability 0.5
         else if(num < 0.65) weather = "Rainy";  // probability 0.2
         else if(num < 0.8) weather = "Snowy"; //probability 0.1
         else if(num < 0.9) weather = "Heat Wave"; //probability 0.1
@@ -857,6 +848,7 @@ function smallMealEvent (){
 
 var buyButton = document.getElementById('buy-btn');
 buyButton.onclick = buyButtonEvents;
+var buyInfo = document.getElementById('buy-info');
 
 $('.buy-info').hide();
 function buyButtonEvents () {
@@ -868,9 +860,8 @@ function buyButtonEvents () {
     $('.buy-info').show();
 };
 
-var buyInfo = document.getElementById('buy-info');
-buyInfo.innerHTML = "<div class = 'col-md-9'><br><b>Store:</b> <br> <button id= 'buy-food-btn' type='button' class='btn-default btn-sm'>Buy</button>  10 lbs of food: $" +PRICE_FOOD+ " <br><button id= 'buy-aid-btn' type='button' class='btn-default btn-sm'>Buy</button>  1 First Aid Kit: $" +PRICE_AID+"</div><div class ='col-md-3' right-align'><br><b>Money: $"+party.money+"<b><div>"
 
+/*
 var buyFood = document.getElementById('buy-food-btn');
 buyFood.onclick = buyFoodEvents;
 
@@ -900,12 +891,51 @@ function buyAidEvents (){
         printEvent.innerHTML = "<div class = 'center-text'>You don't have enough money for this item.</div><br>"
     }
 };
+*/
+//SHOPPING CART EXPERIMENT
 
-// if @ mile X, stop game and print "You have reached a store. Click buy to purchase supplies."
-// if @ mile X, buyButton.removeClass('disabled')
-//buyButton.addClass('')
+var clearfix = document.createElement("div");
+clearfix.className = "clearfix";
 
-//start pace buttons box
+function updatePrices () {
+    var items = document.getElementsByClassName("item");
+    var runningCost = 0;
+
+    for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        var individualCost = item.getElementsByClassName("cost");
+        var stringCost= individualCost[0].innerText;
+        var cost = parseFloat(stringCost);
+
+        var individualQuantity = item.getElementsByClassName("quantity");
+        var stringQuantity= individualQuantity[0].value;
+        var quantity = parseFloat(stringQuantity);
+
+        var total = cost * quantity;
+  
+        runningCost += total;
+
+        var divTotal = item.getElementsByClassName("item-total");
+        divTotal[0].innerText = total.toFixed(2) + "€";
+    }
+
+var totalPrice = document.getElementById("total");
+totalPrice.innerText = runningCost.toFixed(2) + "€";
+party.money -= totalPrice; 
+console.log(party.money);
+var rMoney = document.getElementById("r-money");
+rMoney.innerText = party.money;
+
+};
+
+var calcButton = document.getElementById("calc-button");
+calcButton.onclick = updatePrices;
+
+
+///END SHOPPING CART EXPERIMENT
+
+//pace buttons box
+var paceInfo = document.getElementById('pace-info');
 var paceButton = document.getElementById('pace-btn');
 paceButton.onclick = paceButtonEvents;
 
@@ -952,6 +982,7 @@ function endMessage () {
         $('.map-info').hide();
         statusBox.innerHTML = "Status: Completed";
         disableButtons();
+        endAnimation();
     };
 };
 
@@ -974,7 +1005,16 @@ tentImg.src = "./img/tent.png";
 var storeImg = new Image(); 
 storeImg.src = "./img/store.png";
 
-var drawingConstant = 5
+var thumbImg = new Image();
+thumbImg.src = "./img/thumb.png"
+
+var feverImg = new Image();
+feverImg.src = "./img/fever.png"
+
+var heloImg = new Image();
+heloImg.src = "./img/helo.png"
+
+var drawingConstant = 4.5
 var xCamp = 0;
 
 function clearCanvas () {
@@ -984,14 +1024,14 @@ function clearCanvas () {
 function updateCanvas () {
     // personX += 1;
     clearCanvas();
-    drawBackgroundMap()
+    drawBackgroundMap();
     drawHiker();
     drawTents();
+    //drawWeather();
     //...
 };
 
 personImg.onload = updateCanvas;
-
 
 function drawHiker() {
     var hikerX = miles * drawingConstant;
@@ -1022,4 +1062,72 @@ function drawBackgroundMap() {
     var dotX = miles * drawingConstant;
     ctx.fillStyle = "black";
     ctx.fillRect(5,315, dotX, 15); //ADJUST LENGTH!!!
+};
+
+/*
+function drawWeather (){
+    if (weather === "Sunny") {
+        ctx.fillStyle = "yellow";
+        ctx.arc(150,100,100,0,2*Math.PI);
+        ctx.fill();
+    } else if (weather === "Rainy") {
+        ctx.fillStyle = "green";
+        var y1 = 10;
+        var y2 = 20;
+        var y3 = 30;
+        clearCanvas();
+        function updateRain(){
+            y1 += 100;
+            y2 += 110;
+            y3 += 120;
+            clearCanvas();
+            ctx.fillRect(50,y1,50,50);
+            ctx.fillRect(150,y2,50,50);
+            ctx.fillRect(250,y3,50,50);  
+            window.requestAnimationFrame(updateCanvas);
+        }
+        window.requestAnimationFrame(updateCanvas);
+
+    } else if (weather === "Snowy") {
+        ctx.fillStyle = "white";
+        ctx.fillRect(5,315, 10, 15)
+        ctx.fillRect(5,315, 10, 15)
+        ctx.fillRect(5,315, 10, 15)
+        ctx.fillRect(5,315, 10, 15)
+        ctx.fillRect(5,315, 10, 15)
+        ctx.fillRect(5,315, 10, 15)
+
+    } else if (weather === "Heat Wave") {
+        ctx.fillStyle = "red";
+        ctx.arc(150,100,100,0,2*Math.PI);
+        ctx.fill();
+    } else if (weather === "Thunderstorm")
+        ctx.fillStyle = "blue";
+        ctx.fillRect(5,315, 10, 15)
+};
+
+*/
+function endAnimation () {
+    ctx.fillStyle = "#FF0000";
+    var y1 = 0;
+    var y2 = 0;
+    var y3 = 0;
+    
+    function updateEndAnimation(){
+      y1 += 1;
+      y2 += 2;
+      y3 += 3;
+      clearCanvas();
+      ctx.fillRect( 50,y1,50,50);
+      ctx.fillRect(150,y2,50,50);
+      ctx.fillRect(250,y3,50,50);  
+      window.requestAnimationFrame(updateEndAnimation);
+    }
+    
+    window.requestAnimationFrame(updateEndAnimation);
+};
+
+function deathAnimation () {
+        clearCanvas();
+        ctx.drawImage(thumbImg, 500, 200, thumbImg.width, thumbImg); 
 };

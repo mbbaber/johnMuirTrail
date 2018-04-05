@@ -54,8 +54,8 @@
                 </div> 
 
                 <div id = "status-info" class="status-info">
-                    <div class="col-md-6" id="status-supplies"></div>
-                    <div class="col-md-6" id="status-individual-health"></div>
+                    <div class="float" id="status-supplies"></div>
+                    <div class="float" id="status-individual-health"></div>
                 </div>
 
                 <div id ="rations-info" class="rations-info">
@@ -67,7 +67,38 @@
                 </div> 
 
                 <div id = "buy-info" class="buy-info">
-                </div> 
+                    <div class = "center-text">Maggie's General Store</div>
+                    <div id = "content" class="item col-md-6">
+                        <div class="product-name">1 lb Food</div>
+                        <div class="cost">1.00€</div>
+                        <div class="quantity-wrap">
+                            <label>Qty</label>
+                            <input type="text" value="0" size="5" class="quantity" />
+                        </div>
+                        <div class="item-total">0.00€</div>
+                    </div>
+                    <div class="clearfix"></div>
+                                
+                    <div id = "content" class="item col-md-6">
+                        <div class="product-name">First-Aid Kit</div>
+                        <div class="cost">5.00€</div>
+                        <div class="quantity-wrap">
+                            <label>Qty</label>
+                            <input type="text" value="0" size="5" class="quantity" />
+                        </div>
+                        <div class="item-total">$0.00</div>
+
+                    </div>
+                    <div class="clearfix"></div>
+                
+                        <button id = "calc-button" class = "sm-btn btn-primary">Calculate Prices</button>
+                        <button id = "new-buy-btn" class = "sm-btn btn-success">Buy Items</button>
+
+                    <h5 class ="center-text" >Total Price: <span id="total">$0.00</span></h5>
+                    <h5 class ="center-text" >Remaining Money: <span id="r-money">$0.00</span></h5>
+                </div>
+               
+                
 
                 <div id = "pace-info" class="pace-info">
                     <b>Pace</b> <br>

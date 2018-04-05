@@ -69,9 +69,6 @@ body {
 #no-btn {
     padding: 1px 11px 2px 11px;
 }
-.col-sm-4 {
-
-}
 
 .yesOrNo-info {
     text-align: center;
@@ -80,9 +77,9 @@ body {
     padding-right: 50px;
 }
 
-
 .center-text {
     text-align: center;
+    align-items: center;
 }
 
 .pause-box {
@@ -135,6 +132,33 @@ h1, h3 {
     text-align: center;
     margin-left: 10px;
     margin-top: 0px;
+}
+
+.buy-info {
+    font-size: 16px;
+}
+.clearfix {
+    clear: both;			
+}
+
+.product-name, .quantity-wrap {
+    float: left;
+    margin-right: 5px;
+    width: 100px;
+}
+.cost, .item-total {
+    float: left;
+    margin-right: 5px;
+    width: 60px;
+}
+
+.float {
+    float: left;
+    margin-right: 15%;
+}
+
+.float-cent {
+    float: center;
 }
 
 /*height: auto;
