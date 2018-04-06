@@ -352,7 +352,7 @@ function printStatsBox () {
             } else { 
                 healthCount.className = "red"; 
             }
-            healthCount.innerText = "Health: " + party.healthString() + " ("+party.health()+")" 
+            healthCount.innerText = "Health: " + party.healthString()
         } else {
             healthCount.innerText = "Health: Dying" 
         }  
