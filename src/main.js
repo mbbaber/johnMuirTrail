@@ -468,7 +468,7 @@ camps.push(camp1, camp2, camp3, camp4, camp5, camp6, camp7, camp8, camp9, camp10
 
 //create, print random event, and change associated stats
 function randomEvent () {
-    if ((Math.random() > 0.9) && (miles !== 0)) { //20% probabilty that an event happens each mile (can change this).
+    if ((Math.random() > 0.8) && (miles !== 0)) { //10% probabilty that an event happens each mile (can change this).
         newEvent = events[Math.floor(Math.random()*events.length)];
 
         newEvent.userInput();
@@ -528,8 +528,8 @@ function Event (type, notification, value, stat, text, stopHike) { //setting up 
         } else if (this.type === 'rest') {
             clearInterval(mainInterval);
             statusBox.innerHTML = "Status: Resting";
-            setTimeout(updateRestStats, 2500);
-            setTimeout(stopWalking, 5000);
+            setTimeout(updateRestStats, 1500);
+            setTimeout(stopWalking, 2000);
         }
         printEvent.innerHTML = '<div class = "center-text">'+ text + '</div><br>'
     };
@@ -596,7 +596,7 @@ var event11 = new Event('stat-change', 'negative', -10, 'health', " is exhausted
 
 //lost supplies
 var event12 = new Event ('stat-change', 'negative', -1, 'aid', "'s backpack got wet and a first aid kit was ruined.");
-var event13 = new Event ('stat-change', 'negative', -10, 'money', "'s backpack broke and $10 was lost.");
+var event13 = new Event ('stat-change', 'negative', -10, 'money', "'s backpack broke and 10€ was lost.");
 
 //rest event (lose food, but gain health and more like to have events happen to you.)
 
@@ -616,7 +616,7 @@ function startWalking(){
     $('.rations-info').hide();
     $('.yesOrNo-info').hide();
     $('.map-info').show();
-    mainInterval = setInterval(walking, 200);
+    mainInterval = setInterval(walking, 1000);
     statusBox.innerHTML = "Status: Walking";
 };
 
@@ -796,17 +796,17 @@ function updatePrices () {
         runningCost += total;
 
         var divTotal = item.getElementsByClassName("item-total");
-        divTotal[0].innerText = + "$" + total.toFixed(2);
+        divTotal[0].innerText = total.toFixed(2) + "€" ;
     }
     var totalPrice = document.getElementById("total");
-    totalPrice.innerText = + "$"+ runningCost.toFixed(2);
+    totalPrice.innerText = runningCost.toFixed(2) + "€";
 
-    var rMoney = document.getElementById("r-money");
-    rMoney.innerText = party.money + "€";
+    //var rMoney = document.getElementById("r-money");
+    //rMoney.innerText = party.money.toFixed(2) + "€";
 };
 function buyCart () {
     var items = document.getElementsByClassName("item");
-
+    var totalAll = 0;
     for (var i = 0; i < items.length; i++) {
         var item = items[i];
 
@@ -828,12 +828,19 @@ function buyCart () {
         }
 
         var total = cost * quantity;
-        party.money -= total;
+        totalAll +=total;
+        }
+        if (party.money >= totalAll) {
+            party.money -= totalAll;  
+            var rMoney = document.getElementById("r-money");
+              rMoney.innerText = party.money.toFixed(2) + "€";
+          } else {
+              printEvent.innerHTML = "You don't have enough money for this purchase."
+              setTimeout(function(){printEvent.innerHTML=""}, 2000);
     }
- 
-    var rMoney = document.getElementById("r-money");
-    rMoney.innerText = "$" + party.money;
-}
+    }
+
+
 
 var calcButton = document.getElementById("store-calc-button");
 calcButton.onclick = updatePrices;
