@@ -21,8 +21,7 @@
 // right now when you rest with no food, you dont die => FIXED!
 // make PP presentation => DONE
 
-//NEED HELP
-// Tried to redo shopping cart, but 1) it doesn't look right 2) it's not really working...  
+//TODO:
 // layout issue - can do Fri morn.
 
 //constants
@@ -231,7 +230,7 @@ function adjustHikerStats () {
     };
     function adjustForFood () { // if food falls to zero, hiker health will deteriorate fast.
         for (i = 0; i < party.hikers.length; i++){
-            if (party.food < 0) {
+            if ((party.food <= 0) && (miles %party.pace === 0)) {
                 party.hikers[i].health -= 20; // hiker will die in 5 days.
             }
         };
@@ -616,7 +615,7 @@ function startWalking(){
     $('.rations-info').hide();
     $('.yesOrNo-info').hide();
     $('.map-info').show();
-    mainInterval = setInterval(walking, 1000);
+    mainInterval = setInterval(walking, 750);
     statusBox.innerHTML = "Status: Walking";
 };
 
@@ -776,8 +775,9 @@ function buyButtonEvents () {
 
 var clearfix = document.createElement("div");
 clearfix.className = "clearfix";
-
+document.getElementById('store-buy-button').disabled = true;
 function updatePrices () {
+    document.getElementById('store-buy-button').disabled = false;
     var items = document.getElementsByClassName("item");
     var runningCost = 0;
 
