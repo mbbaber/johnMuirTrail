@@ -807,6 +807,10 @@ function updatePrices () {
 function buyCart () {
     var items = document.getElementsByClassName("item");
     var totalAll = 0;
+
+    var firstAidPurchased=0,
+        foodPurchased=0;
+
     for (var i = 0; i < items.length; i++) {
         var item = items[i];
 
@@ -822,23 +826,26 @@ function buyCart () {
         var quantity = parseFloat(stringQuantity);
 
         if (name == 'First-Aid Kit') {
-            party.aid += quantity;
+            firstAidPurchased = quantity;
         } else if (name == '1 lb Food') {
-            party.food += quantity;
+            foodPurchased = quantity;
         }
 
         var total = cost * quantity;
         totalAll +=total;
-        }
-        if (party.money >= totalAll) {
-            party.money -= totalAll;  
-            var rMoney = document.getElementById("r-money");
-              rMoney.innerText = party.money.toFixed(2) + "€";
-          } else {
-              printEvent.innerHTML = "You don't have enough money for this purchase."
-              setTimeout(function(){printEvent.innerHTML=""}, 2000);
     }
+    if (party.money >= totalAll) {
+        party.money -= totalAll;  
+        var rMoney = document.getElementById("r-money");
+        rMoney.innerText = party.money.toFixed(2) + "€";
+        party.aid += firstAidPurchased;
+        party.food += foodPurchased;
+
+    } else {
+        printEvent.innerHTML = "You don't have enough money for this purchase."
+        setTimeout(function(){printEvent.innerHTML=""}, 2000);
     }
+}
 
 
 
